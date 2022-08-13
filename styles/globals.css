@@ -18,9 +18,12 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+    font-family: Arial;
   }
   body {
-    color: white;
-    background: black;
-  }
+    color: black;
+    background:rgb(214, 207, 207);
 }
+}
+
+
