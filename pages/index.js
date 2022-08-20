@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Homestyles from "../styles/Home.module.css";
 import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
 
 export default function Home() {
   return (
@@ -32,9 +33,9 @@ export default function Home() {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <Nav />
+      <NavBar />
       <Header />
-      <article class={Homestyles.article}>
+      <article className={Homestyles.article}>
         <p>Our services: </p>
         <ul>
           <li>

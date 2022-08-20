@@ -1,25 +1,103 @@
 .nav {
-    color: rgb(222, 94, 115);
+    color: whitesmoke;
     background-color:rgb(51, 51, 51);
-    height: 4rem;
-    padding: 2px;
+   min-height: 4rem;
+    padding: 2px 0px 2px 0px;
     cursor: default;
+    margin: 0px 0rem 0px 0px;
+     
 }
-
 .nav ul {
-    display: flex;
+   display: flex;
+    flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    list-style: none;
+    list-style: none;  
 }
 .nav li:hover {
-    opacity: .75;
+    /* opacity: .75; */
+    color: rgb(222, 94, 115);
 }
 .nav li:active {
     opacity: .5;
 }
 .nav li a {
     padding: 1.5rem;
-   font-size: 20px;
+   font-size: 1.5rem;
    
+}
+.nav_link {
+    transition: 0.4s ease;
+}
+.styledBurger {
+    display: none;
+}
+.NavBar .mobileNav{
+    display: none;
+}
+
+@media (max-width:640px) {
+    .normalNav {
+        display:none;
+    }
+    .NavBar .mobileNav{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        background-color: rgb(51, 51, 51);
+        height: 70px; 
+    }
+    .NavBar{
+        display: flex;
+        background-color: rgb(51, 51, 51);;
+    }
+
+
+    .nav{
+        min-height: 0;
+    }
+   
+    .NavBar .nav ul {
+       min-height: 0;
+       margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+        top: 60px;
+        left: 0%;
+        width: 100%;
+        background-color: rgb(51, 51, 51);
+        border: solid 5px rgb(51, 51, 51);
+        z-index: 1;
+        padding: 5px;
+     }
+     .NavBar .nav ul li {
+        padding-left: 5%;
+        padding-top: 6px;
+     }
+
+    .nav li a {
+        font-size: 1.15rem;
+        padding: 5px;
+        
+    }
+    
+   .styledBurger{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 4px 4px 4px 1.5rem;
+         color: whitesmoke;
+         height: 64px;
+
+    }
+    .styledBurger:hover{
+        color: rgb(222, 94, 115);
+    
+    }
+  
+ 
+    
 }

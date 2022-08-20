@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Nav from "../components/Nav";
+import NavBar from "../components/NavBar";
+import Navlinks from "../components/Navlinks";
 
 export const about = () => {
   return (
     <div>
-      <Nav />
+      <NavBar />
       <h2>We are a family run clinic specializing in Neurology disorders</h2>
       <h3>
         Back to

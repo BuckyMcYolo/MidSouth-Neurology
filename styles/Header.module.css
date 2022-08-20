@@ -3,8 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0; 
-
+  margin: 15px 0px 0px 0px; 
 }
 
 .title span{
@@ -22,7 +21,16 @@
     margin: 0px 2px 2px 5px;
     padding: 4px;
 }
+.title span {
+  padding-right: 0px;
+  padding-left: 8px;
+}
 
+@media(max-width:360px) {
+  .title {
+    flex-wrap: wrap;
+  }
+}
 
 
 

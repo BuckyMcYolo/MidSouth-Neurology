@@ -11,13 +11,13 @@ const Footer = () => {
             width={300}
             height={125}
           ></Image>
-          <div className={FooterStyles.patient_portal}>
+          <p className={FooterStyles.patient_portal}>
             Patient Portal:
             <br />
             <button className={FooterStyles.mychartbtn}>MyChart</button>
-          </div>
+          </p>
         </h3>{" "}
-        <p>
+        <span>
           <strong>Business Hours:</strong>
           <br></br>
           Monday through Friday: 8 AM to 5 PM
@@ -27,8 +27,10 @@ const Footer = () => {
           &#183; 2425 Proper Street Corinth, MS 38834
           <br />
           &#183; 609 Brunson Drive Tupelo, MS 38801
-          <div>&#169; MidSouth Neurology 2022</div>{" "}
-        </p>
+          <p className="FooterStyles.copyright">
+            &#169; MidSouth Neurology 2022
+          </p>{" "}
+        </span>
       </footer>
     </div>
   );
