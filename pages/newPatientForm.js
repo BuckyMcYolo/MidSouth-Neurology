@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import NewPatientPageStyles from "../styles/NewPatient.module.css";
 
@@ -14,9 +15,16 @@ const newPatientForm = () => {
         appointment, please fill out the new Patient Registration Form below ,
         print it, and bring it with you when you come to your appointment
       </h2>
-      <button className={NewPatientPageStyles.button}>
-        Patient Registration Form
-      </button>
+      <article className={NewPatientPageStyles.form}>
+        {" "}
+        <a href="https://onedrive.live.com/?authkey=%21ADwV5hCuVPYMWjM&cid=ECB6A90230453CEF&id=ECB6A90230453CEF%21740&parId=root&o=OneUp">
+          {" "}
+          <button className={NewPatientPageStyles.button}>
+            Patient Registration Form{" "}
+          </button>
+        </a>
+      </article>
+      <Footer />
     </div>
   );
 };

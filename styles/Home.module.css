@@ -1,37 +1,37 @@
 .article {
-    color: black;
-    height:fit-content;
-   padding: 0px 75px;
+  color: black;
+  height: fit-content;
+  padding: 0px 6rem;
 }
 
 .statement {
-    font-size: 32px;
-    padding: 1.5rem 0px 0px 0px;
-    display: flex;
-    text-align: center;
-    margin: 32px 6px 0px 6px ;
+  font-size: 1.8rem;
+  padding: 1.5rem 0px 0px 0px;
+  display: flex;
+  text-align: center;
+  margin: 2.25rem 6px 0px 6px;
 }
 .aboutUs {
-    font-size: 22px;
-   display: flex;
-   flex-direction: column;
-   text-align: center;
-   justify-content: center;
-   align-items: center;
-    padding:5px 15px 15px 15px;
-    margin: 5px;
-    
+  font-size: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 15px 15px 15px;
+  margin: 5px;
 }
 .servicesButton {
-    color: whitesmoke;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    padding: 0.9rem;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow:  rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
-    border: solid 2px white;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-top: 12px;
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  padding: 0.9rem;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
+  border: solid 2px white;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 12px;
 }

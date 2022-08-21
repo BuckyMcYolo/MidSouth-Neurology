@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 
 export const services = () => {
@@ -20,6 +21,7 @@ export const services = () => {
           <li>Short wait times and expert personal ready to assist you</li>
         </ul>
       </h3>
+      <Footer />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 
 const locations = () => {
@@ -29,6 +30,7 @@ const locations = () => {
           Fax: 662-396-9449
         </p>
       </h3>
+      <Footer />
     </div>
   );
 };
