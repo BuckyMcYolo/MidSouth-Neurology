@@ -10,13 +10,13 @@ const Navlinks = () => {
           <Link href="/">Home </Link>
         </li>
         <li className={navStyles.nav_link}>
-          <Link href="/about">About</Link>{" "}
+          <Link href="/services">Our Services</Link>{" "}
         </li>
         <li className={navStyles.nav_link}>
           <Link href="/locations"> Locations</Link>
         </li>
         <li className={navStyles.nav_link}>
-          <Link href="/contact">Contact us</Link>{" "}
+          <Link href="/newPatientForm">New Patients</Link>{" "}
         </li>{" "}
       </ul>{" "}
     </nav>

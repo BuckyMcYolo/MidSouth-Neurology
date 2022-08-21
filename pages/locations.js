@@ -1,13 +1,34 @@
-import Nav from "../components/Nav";
 import NavBar from "../components/NavBar";
 
 const locations = () => {
   return (
     <div>
       <NavBar />
-      <h2>We have locations in Tupelo, MS and Corinth, MS</h2>
-      <h3>Tupelo location (Insert Image)</h3>
-      <h3>Corinth location (Insert Image)</h3>
+      <h2>Come see us wherever is more convienent for you</h2>
+      <h3>
+        Tupelo location:
+        <p>
+          (Insert Image) located @ <br />
+          609 Brunson Drive <br />
+          Tupelo, MS 38801
+        </p>
+        <p>
+          Phone: 662-205-4486 <br />
+          Fax: 662-205-4588
+        </p>
+      </h3>
+      <h3>
+        Corinth location:
+        <p>
+          (Insert Image) located @ <br />
+          2425 Proper Street <br />
+          Corinth, MS 38834
+        </p>
+        <p>
+          Phone: 662-396-9447 <br />
+          Fax: 662-396-9449
+        </p>
+      </h3>
     </div>
   );
 };
