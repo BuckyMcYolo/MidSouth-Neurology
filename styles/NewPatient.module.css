@@ -1,0 +1,35 @@
+.question{
+    padding: 30px;
+}
+
+.form{
+    padding: 20px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.button{
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow:  rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
+    border: solid 2px white;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: ease-in-out 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button:hover {
+    scale: 1.1;
+}
+.button:active {
+    opacity: 0.75;
+}

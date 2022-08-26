@@ -1,0 +1,15 @@
+.tupeloInfo {
+  color: rgb(175, 6, 6);
+}
+.tupelo {
+  display: block;
+  align-self: center;
+}
+
+.pics {
+  z-index: -1;
+}
+.container h2 {
+  margin: 0;
+  background-color: red;
+}

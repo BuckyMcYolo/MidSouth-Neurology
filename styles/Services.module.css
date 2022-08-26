@@ -1,0 +1,24 @@
+.href {
+  color: rgb(222, 94, 115);
+}
+.href:hover {
+  opacity: 0.8;
+}
+.services ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin: 5px;
+}
+.services li {
+  font-size: 1.25rem;
+  border-bottom: 2px solid black;
+  text-align: center;
+  padding: 0.5rem 2rem;
+  background-color: rgba(27, 118, 209, 0.4);
+}
+.main {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
