@@ -1,103 +1,102 @@
 .nav {
-    color: whitesmoke;
-    background-color:rgb(51, 51, 51);
-   min-height: 4rem;
-    padding: 2px 0px 2px 0px;
-    cursor: default;
-    margin: 0px 0rem 0px 0px;
-     
+  color: white;
+  background-color: rgb(51, 51, 51);
+  min-height: 4rem;
+  padding: 2px 0px 2px 0px;
+  cursor: default;
+  margin: 0px 0rem 0px 0px;
 }
 .nav ul {
-   display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    list-style: none;  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  list-style: none;
+  font-family: sans-serif;
+  padding-top: 5px;
 }
 .nav li:hover {
-    /* opacity: .75; */
-    color: rgb(222, 94, 115);
+  /* opacity: .75; */
+  color: rgb(222, 94, 115);
 }
 .nav li:active {
-    opacity: .5;
+  opacity: 0.5;
 }
 .nav li a {
-    padding: 1.5rem;
-   font-size: 1.5rem;
-   
+  padding: 1.5rem;
+  font-size: 1.5rem;
 }
 .nav_link {
-    transition: 0.4s ease;
+  transition: 0.4s ease;
+  padding: 5px;
+  font-weight: 500;
+  /* text-decoration: underline;
+  text-decoration-color: black;
+  text-decoration-style: solid; */
 }
 .styledBurger {
-    display: none;
+  display: none;
 }
-.NavBar .mobileNav{
-    display: none;
+.NavBar .mobileNav {
+  display: none;
 }
 
-@media (max-width:684px) {
-    .normalNav {
-        display:none;
-    }
-    .NavBar .mobileNav{
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        background-color: rgb(51, 51, 51);
-        height: 70px; 
-    }
-    .NavBar{
-        display: flex;
-        background-color: rgb(51, 51, 51);;
-    }
+@media (max-width: 684px) {
+  .normalNav {
+    display: none;
+  }
+  .NavBar .mobileNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: rgb(51, 51, 51);
+    height: 70px;
+  }
+  .NavBar {
+    display: flex;
+    background-color: rgb(51, 51, 51);
+  }
 
+  .nav {
+    min-height: 0;
+  }
 
-    .nav{
-        min-height: 0;
-    }
-   
-    .NavBar .nav ul {
-       min-height: 0;
-       margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        position: absolute;
-        top: 60px;
-        left: 0%;
-        width: 100%;
-        background-color: rgb(51, 51, 51);
-        border: solid 5px rgb(51, 51, 51);
-        z-index: 1;
-        padding: 5px;
-     }
-     .NavBar .nav ul li {
-        padding-left: 5%;
-        padding-top: 6px;
-     }
+  .NavBar .nav ul {
+    min-height: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 60px;
+    left: 0%;
+    width: 100%;
+    background-color: rgb(51, 51, 51);
+    border: solid 5pxrgb (51, 51, 51);
+    z-index: 1;
+    padding: 5px;
+  }
+  .NavBar .nav ul li {
+    padding-left: 5%;
+    padding-top: 6px;
+  }
 
-    .nav li a {
-        font-size: 1.15rem;
-        padding: 5px;
-        
-    }
-    
-   .styledBurger{
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 4px 4px 4px 1.5rem;
-         color: whitesmoke;
-         height: 64px;
+  .nav li a {
+    font-size: 1.15rem;
+    padding: 5px;
+  }
 
-    }
-    .styledBurger:hover{
-        color: rgb(222, 94, 115);
-    
-    }
-  
- 
-    
+  .styledBurger {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 4px 4px 4px 1.5rem;
+    color: white;
+    height: 64px;
+  }
+  .styledBurger:hover {
+    color: rgb(222, 94, 115);
+    text-decoration: underline;
+  }
 }

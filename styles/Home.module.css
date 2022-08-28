@@ -1,25 +1,36 @@
 .article {
-  color: black;
+  color: rgb(0, 0, 0);
   height: fit-content;
-  padding: 0px 6rem;
+  font-weight: 800;
+  padding: 0px 20rem;
+  background-color: #6a92a9;
+  padding-bottom: 45px;
+  margin-bottom: 8rem;
+}
+.brain {
+  z-index: -10;
+  opacity: 0.8;
 }
 
+.PicContainer {
+  position: relative;
+}
 .statement {
-  font-size: 1.8rem;
+  font-size: 2rem;
   padding: 1.5rem 0px 0px 0px;
   display: flex;
   text-align: center;
-  margin: 2.25rem 6px 0px 6px;
+  margin: 0;
 }
 .aboutUs {
-  font-size: 1.35rem;
+  font-size: 1.55rem;
   display: flex;
   flex-direction: column;
   text-align: center;
   justify-content: center;
   align-items: center;
   padding: 5px 15px 15px 15px;
-  margin: 5px;
+  margin: 0px 5px;
 }
 .servicesButton {
   color: whitesmoke;
@@ -30,8 +41,42 @@
   padding: 0.9rem;
   background-color: rgba(255, 255, 255, 0.1) !important;
   box-shadow: rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
-  border: solid 2px white;
+  border: none;
   border-radius: 12px;
   cursor: pointer;
   margin-top: 12px;
+}
+@media (max-width: 1080px) {
+  .article {
+    padding: 15px 5rem;
+  }
+}
+@media (max-width: 800px) {
+  .brain {
+    z-index: -10;
+  }
+  .aboutUs {
+    padding: 5px;
+  }
+  .article {
+    padding: 20px 2rem;
+  }
+}
+@media (max-width: 650px) {
+  .statement {
+    font-size: 2rem;
+    padding: 10rem 0px 0px 0px;
+    display: flex;
+    text-align: center;
+    margin: 0;
+  }
+}
+@media (max-width: 400px) {
+  .statement {
+    font-size: 2rem;
+    padding-top: 30rem;
+    display: flex;
+    text-align: center;
+    margin: 0;
+  }
 }

@@ -1,35 +1,98 @@
-.question{
-    padding: 30px;
+.head {
+  color: rgb(0, 0, 0);
+  background-color: rgba(160, 160, 160, 0.8);
+  font-weight: bold;
+  transform: translateY(-9rem);
+  margin: 0rem 15rem;
+  font-size: 2rem;
+  content: normal;
+  text-align: center;
+}
+.text {
+  font-size: 1.8rem;
+  text-align: center;
+  width: auto;
+  height: auto;
+  padding: 5rem;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.text p {
+  padding: 0rem 10rem;
 }
 
-.form{
-    padding: 20px 20px 0px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.form {
+  font-size: 1.53rem;
+  margin: 10px 10rem;
+  text-align: center;
+  transform: translateY(-8rem);
+  background-color: rgba(160, 160, 160, 0.8);
+  font-weight: 600;
 }
-.button{
-    color: whitesmoke;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    padding: 0.9rem;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    box-shadow:  rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
-    border: solid 2px white;
-    border-radius: 12px;
-    cursor: pointer;
-    margin-left: 12px;
-    transition: ease-in-out 0.2s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.buttonform {
+  display: flex;
+  justify-content: center;
+  transform: translateY(-7rem);
+}
+.button {
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  padding: 0.9rem;
+  background-color: #ffffff1a !important;
+  box-shadow: rgba(27, 118, 209, 0.968) 1px 1000px 1px inset;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: ease-in-out 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button:hover {
-    scale: 1.1;
+  scale: 1.1;
 }
 .button:active {
-    opacity: 0.75;
+  opacity: 0.75;
+}
+@media (max-width: 768px) {
+  .head {
+    margin: 0 8rem;
+    font-size: 1.5rem;
+    transform: translateY(-15rem);
+  }
+  .text,
+  .text p {
+    padding: 1rem 1rem;
+    font-size: 1rem;
+    transform: translateY(-10rem);
+  }
+  .form {
+    margin: 0 5rem;
+    font-size: 1.3rem;
+    transform: translateY(-14rem);
+  }
+  .button {
+    transform: translateY(-6rem);
+  }
+}
+@media (max-width: 500px) {
+  .head {
+    margin: 0 4rem;
+    font-size: 1.3rem;
+    transform: translateY(-22rem);
+  }
+  .form {
+    margin: 0 2.5rem;
+    font-size: 1.1rem;
+    transform: translateY(-21rem);
+  }
+  .button {
+    transform: translateY(-12rem);
+  }
 }

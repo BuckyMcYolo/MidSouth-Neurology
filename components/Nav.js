@@ -4,7 +4,7 @@ import Navlinks from "./Navlinks";
 const Nav = () => {
   return (
     <nav className={navStyles.normalNav}>
-      <Navlinks />{" "}
+      <Navlinks />
     </nav>
   );
 };

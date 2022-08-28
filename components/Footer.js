@@ -1,6 +1,7 @@
-import FooterStyles from "../styles/Footer.module.css";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import FooterStyles from "../styles/Footer.module.css"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import Footer2 from "./Footer2"
 
 const Footer = () => {
   return (
@@ -32,26 +33,46 @@ const Footer = () => {
           <motion.button
             className={FooterStyles.mychartbtn}
             whileHover={{
-              scale: 1.1,
+              scale: 1.05,
               opacity: 0.9,
               transition: { type: "spring", stiffness: 400, damping: 10 },
             }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.97 }}
           >
             {" "}
-            <a href="https://mychart.baptistonecare.org/prd/Authentication/Login?">
+            <a
+              href="https://mychart.baptistonecare.org/prd/Authentication/Login?"
+              target="_blank"
+            >
               {" "}
               MyChart{" "}
             </a>{" "}
-          </motion.button>
-        </p>
-        <p className={FooterStyles.copyright}>
-          &#169; MidSouth Neurology 2022
-          <Image src="/ABP&N.png" width={55} height={65} />
+          </motion.button>{" "}
         </p>{" "}
+        <p className={FooterStyles.patient_portal}>
+          Contact Us:
+          <a
+            href="tel:6623969447"
+            class=" text-black  hover:text-blue-500 active:text-blue-400 rounded-full px-5  text-center "
+          >
+            <motion.button
+              className={FooterStyles.mychartbtn}
+              whileHover={{
+                scale: 1.05,
+                opacity: 0.9,
+                transition: { type: "spring", stiffness: 400, damping: 10 },
+              }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {" "}
+              Contact
+            </motion.button>
+          </a>
+        </p>
       </footer>
+      <Footer2 />
     </div>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

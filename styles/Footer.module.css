@@ -1,9 +1,9 @@
 .footer {
-  color: white;
-  background-color: rgb(51, 51, 51);
+  color: black;
+  background-color: rgba(205, 205, 205);
   padding: auto;
-  margin: 3.5rem 0rem 0px 0px;
-  font-size: 1em;
+  margin: 0px;
+  font-size: 1.2em;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -12,6 +12,9 @@
 }
 
 .patient_portal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   font-size: 22px;
   font-weight: bold;
@@ -40,6 +43,7 @@
   border-radius: 12px;
   cursor: pointer;
   margin-left: 12px;
+  width: auto;
 }
 
 @media (max-width: 680px) {

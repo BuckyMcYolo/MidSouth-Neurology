@@ -1,0 +1,19 @@
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  box-shadow: 10px;
+}
+
+.mainGrid p {
+  padding: 10px;
+}
+@media (max-width: 680px) {
+  .mainGrid {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    transform: translateY(0px);
+  }
+}

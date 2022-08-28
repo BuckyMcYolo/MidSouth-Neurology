@@ -1,5 +1,6 @@
 import Link from "next/link";
 import navStyles from "../styles/Nav.module.css";
+import Image from "next/image";
 
 const Navlinks = () => {
   return (
@@ -7,7 +8,7 @@ const Navlinks = () => {
       {" "}
       <ul className={navStyles.nav_menu}>
         <li className={navStyles.nav_link}>
-          <Link href="/">Home </Link>
+          <Link href="/">Home</Link>
         </li>
         <li className={navStyles.nav_link}>
           <Link href="/services">Our Services</Link>{" "}

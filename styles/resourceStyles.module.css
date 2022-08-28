@@ -1,0 +1,56 @@
+.mainGrid {
+  font-size: 1.8rem;
+  text-align: center;
+}
+.mainGrid ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* background: rgba(71, 85, 105, 0.213); */
+  margin: 0 5rem;
+  padding-bottom: 4rem;
+}
+.mainGrid li {
+  color: black;
+  font-size: 30px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.cards {
+  margin: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainGrid button {
+  background-color: rgba(36, 125, 177, 0.722);
+  font-size: 1.5rem;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 10px 15px -3px rgba(37, 41, 45, 0.216),
+    0 4px 6px -4px rgba(15, 15, 16, 0.418);
+}
+.mainGrid button:hover {
+  opacity: 0.8;
+}
+.mainGrid button:active {
+  border: black 1px solid;
+  opacity: 1;
+}
+@media (max-width: 780px) {
+  .mainGrid ul {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    margin: 0 0.5rem;
+  }
+}

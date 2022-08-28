@@ -1,15 +1,71 @@
-.tupeloInfo {
-  color: rgb(175, 6, 6);
-}
 .tupelo {
-  display: block;
-  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+.main {
+  margin: 0;
+}
+.main h3 {
+  text-align: center;
 }
 
-.pics {
-  z-index: -1;
+.corinth {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
 }
-.container h2 {
-  margin: 0;
-  background-color: red;
+.Map {
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 1500px) {
+  .main iframe {
+    width: 900px;
+  }
+}
+@media (max-width: 1200px) {
+  .main iframe {
+    width: 700px;
+    padding: 0;
+  }
+}
+@media (max-width: 1000px) {
+  .main iframe {
+    width: 600px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main iframe {
+    width: 500px;
+    height: 500px;
+  }
+}
+@media (max-width: 780px) {
+  .tupelo,
+  .tupelo .pics {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .corinth,
+  .corinth .pics {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .main iframe {
+    width: 350px;
+    height: 350px;
+    padding: 0;
+  }
+}
+@media (max-width: 400px) {
+  .main iframe {
+    width: 300px;
+    height: 300px;
+    padding: 0;
+  }
 }

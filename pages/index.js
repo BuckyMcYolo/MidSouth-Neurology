@@ -5,10 +5,11 @@ import Homestyles from "../styles/Home.module.css";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { motion } from "framer-motion";
+import WhyChooseUs from "../components/WhyChooseUs";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-[url('/brainBackground.jpg')] bg-fixed opacity-100">
       <Head>
         <title>MidSouth Neurology</title>
         <meta name="description" content="Neurology" />
@@ -35,6 +36,16 @@ export default function Home() {
         <meta name="theme-color" content="#ffffff" />
       </Head>
       <NavBar />
+      <section>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </section>
       <Header />
       <article className={Homestyles.article}>
         <p className={Homestyles.statement}>
@@ -49,16 +60,17 @@ export default function Home() {
           <motion.button
             className={Homestyles.servicesButton}
             whileHover={{
-              scale: 1.1,
+              scale: 1.05,
               opacity: 0.9,
               transition: { type: "spring", stiffness: 400, damping: 10 },
             }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.97 }}
           >
             <Link href="/services">Learn more</Link>
           </motion.button>
         </p>
       </article>
+      <WhyChooseUs />
       <Footer />
     </div>
   );
