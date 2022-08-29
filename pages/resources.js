@@ -1,11 +1,14 @@
 import NavBar from "../components/NavBar"
 import Footer from "../components/Footer"
 import resourceStyles from "../styles/resourceStyles.module.css"
+import Head from "next/head"
 
 const resources = () => {
   return (
     <div className="bg-[url('/website-background-08.jpg')] bg-fixed opacity-100">
-      {" "}
+      <Head>
+        <title>Resources - Midsouth Neurology</title>
+      </Head>{" "}
       <NavBar />
       <p className="text-4xl bg-slate-600/40 text-slate-900 text-center py-8 mb-10 border-b-2 border-black font-bold">
         Resources:
@@ -112,10 +115,11 @@ const resources = () => {
           <li className="border-b-2 border-black">
             <p className={resourceStyles.cards}>
               {" "}
-              Carpal Tunnel <span className="text-lg py-2">(Mayo Clininc)</span>
+              Parkinson's{" "}
+              <span className="text-lg py-2">(Parkinson's Foundation)</span>
               <button>
                 <a
-                  href="https://www.mayoclinic.org/diseases-conditions/carpal-tunnel-syndrome/symptoms-causes/syc-20355603"
+                  href="https://www.parkinson.org/?utm_source=bing&utm_medium=cpc&utm_campaign=Bing_AlwaysOn_Brand&utm_term=www%20parkinson%20org&msclkid=1bbb8acf4ec4101d8e74e9c20d46eb1f&utm_content=Parkinson.org_Exact"
                   target="_blank"
                 >
                   Website

@@ -4,12 +4,15 @@ import NavBar from "../components/NavBar"
 import serviceStyles from "../styles/Services.module.css"
 import Image from "next/image"
 import { motion, useScroll } from "framer-motion"
+import Head from "next/head"
 
 export const services = () => {
   const { scrollYProgress } = useScroll()
   return (
     <>
-      {" "}
+      <Head>
+        <title>Services - MidSouth Neurology</title>
+      </Head>{" "}
       <NavBar />
       <motion.div
         className={serviceStyles.scrollBar}

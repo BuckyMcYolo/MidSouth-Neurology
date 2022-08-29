@@ -1,10 +1,14 @@
 import Footer from "../components/Footer"
 import NavBar from "../components/NavBar"
 import NewPatientPageStyles from "../styles/NewPatient.module.css"
+import Head from "next/head"
 
 const newPatientForm = () => {
   return (
     <div>
+      <Head>
+        <title>New Patients - Midsouth Neurology</title>
+      </Head>
       <NavBar />
       <section className="bg-[url('/newPatient.png')] bg-contain bg-no-repeat bg-local opacity-100 h-96 py-96 lg:bg-cover ">
         {" "}

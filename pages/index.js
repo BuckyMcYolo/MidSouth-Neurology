@@ -1,17 +1,17 @@
-import Head from "next/head";
-import Header from "../components/Header";
-import Link from "next/link";
-import Homestyles from "../styles/Home.module.css";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import { motion } from "framer-motion";
-import WhyChooseUs from "../components/WhyChooseUs";
+import Head from "next/head"
+import Header from "../components/Header"
+import Link from "next/link"
+import Homestyles from "../styles/Home.module.css"
+import Footer from "../components/Footer"
+import NavBar from "../components/NavBar"
+import { motion } from "framer-motion"
+import WhyChooseUs from "../components/WhyChooseUs"
 
 export default function Home() {
   return (
     <div className="bg-[url('/brainBackground.jpg')] bg-fixed opacity-100">
       <Head>
-        <title>MidSouth Neurology</title>
+        <title>MidSouth Neurology - Home</title>
         <meta name="description" content="Neurology" />
         <link
           rel="apple-touch-icon"
@@ -73,5 +73,5 @@ export default function Home() {
       <WhyChooseUs />
       <Footer />
     </div>
-  );
+  )
 }

@@ -2,10 +2,14 @@ import Footer from "../components/Footer"
 import NavBar from "../components/NavBar"
 import Image from "next/image"
 import locationStyles from "../styles/Location.module.css"
+import Head from "next/head"
 
 const locations = () => {
   return (
     <div className={locationStyles.main}>
+      <Head>
+        <title>Locations - Midsouth Neurology</title>
+      </Head>
       <NavBar />
       <h2 className="m-0 p-8 text-2xl md:text-4xl font-bold h-44 text-center relative container font-sans font ">
         We can serve you at 2 different locations including our brand new Tupelo
@@ -36,10 +40,10 @@ const locations = () => {
           width="1100"
           height="600"
           style={{ border: 0 }}
-          allowfullscreen=""
+          allowFullScreen=""
           loading="lazy"
           layout="intrinsic"
-          referrerpolicy="no-referrer-when-downgrade"
+          referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       </h3>
       <p className="py-10"></p>
@@ -52,9 +56,9 @@ const locations = () => {
           width="1100"
           height="600"
           style={{ border: 0 }}
-          allowfullscreen=""
+          allowFullScreen=""
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
+          referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
         <p className="text-white py-4 pr-8 text-3xl text-center p-2 md:p-0">
           <span className="text-black font-bold">
