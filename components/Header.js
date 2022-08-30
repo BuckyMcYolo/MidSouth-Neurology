@@ -13,7 +13,7 @@ const Header = () => {
     <motion.div data-isOpen={is1Open} layout className={HeaderStyles.div}>
       <h1 className={HeaderStyles.title}>
         MidSouth <span> Neurology </span>
-        <Image src="/logo-again.png" width={60} height={65} />
+        <Image src="/logo-again.png" width={60} height={65} alt="logo" />
       </h1>
       <h3 className="text-2xl text-center">
         <ul className="font-bold pb-8 md">William E. Owens, MD</ul>

@@ -1,13 +1,12 @@
-import Link from "next/link"
-import Footer from "../components/Footer"
-import NavBar from "../components/NavBar"
-import serviceStyles from "../styles/Services.module.css"
-import Image from "next/image"
-import { motion, useScroll } from "framer-motion"
-import Head from "next/head"
+import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
+import serviceStyles from "../styles/Services.module.css";
+import Image from "next/image";
+import { motion, useScroll } from "framer-motion";
+import Head from "next/head";
 
 export const services = () => {
-  const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll();
   return (
     <>
       <Head>
@@ -51,6 +50,7 @@ export const services = () => {
               width={800}
               height={400}
               layout="intrinsic"
+              alt="EMG being done"
             />
             <br />
             EMG/Nerve testing is a Short 1 hour long diagnostic test that can
@@ -95,6 +95,7 @@ export const services = () => {
               width={800}
               height={500}
               layout="intrinsic"
+              alt="EEG being done"
             />
             <br />
             An EEG (or Electroencephalogram) is a test that measures your brain
@@ -130,6 +131,7 @@ export const services = () => {
               width={800}
               height={500}
               layout="intrinsic"
+              alt="Botox being done"
             />
             <br />
             Botox injections block certain chemical signals from nerves, mostly
@@ -169,6 +171,7 @@ export const services = () => {
               height={500}
               layout="intrinsic"
               quality={100}
+              alt="Neurologist showing patient MRI"
             />
             <br />
             Our main service here is general Neurology. We are experts in the
@@ -181,7 +184,7 @@ export const services = () => {
       </h3>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default services
+export default services;

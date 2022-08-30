@@ -1,9 +1,8 @@
 import Link from "next/link";
 import boxElements from "../styles/ChooseUs.module.css";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 
 export const whyChooseUs = () => {
-  const { scrollProgress } = useScroll();
   return (
     <div>
       <motion.article
@@ -33,7 +32,7 @@ export const whyChooseUs = () => {
           <br />
           <a
             href="tel:6623969447"
-            class=" text-blue-700 underline hover:text-blue-500 active:text-blue-400 rounded-full px-5 py-2 "
+            className=" text-blue-700 underline hover:text-blue-500 active:text-blue-400 rounded-full px-5 py-2 "
           >
             Contact Us
           </a>

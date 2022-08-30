@@ -32,6 +32,7 @@ const locations = () => {
             width={450}
             layout="intrinsic"
             quality={100}
+            alt="Tupelo picture"
           />{" "}
         </p>
         <iframe
@@ -77,6 +78,7 @@ const locations = () => {
             width={600}
             layout="intrinsic"
             quality={100}
+            alt="Corinth Image"
           />
         </p>
       </h3>
