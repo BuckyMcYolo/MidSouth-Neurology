@@ -71,7 +71,7 @@
     margin: 0;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 450px) {
   .statement {
     font-size: 2rem;
     padding-top: 30rem;
