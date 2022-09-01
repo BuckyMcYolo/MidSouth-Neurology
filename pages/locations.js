@@ -1,8 +1,8 @@
-import Footer from "../components/Footer"
-import NavBar from "../components/NavBar"
-import Image from "next/image"
-import locationStyles from "../styles/Location.module.css"
-import Head from "next/head"
+import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
+import Image from "next/image";
+import locationStyles from "../styles/Location.module.css";
+import Head from "next/head";
 
 const locations = () => {
   return (
@@ -61,7 +61,7 @@ const locations = () => {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
-        <p className="text-white py-4 pr-8 text-3xl text-center p-2 md:p-0">
+        <p className="text-white text-3xl text-center px-4 sm:px-4 md:p-3 lg:p-4 2xl:p-5">
           <span className="text-black font-bold">
             {" "}
             Corinth location:
@@ -73,7 +73,7 @@ const locations = () => {
           Fax: 662-396-9449{" "}
           <Image
             className=""
-            src="/tupeloFront.png"
+            src="/corinth.png"
             height={350}
             width={600}
             layout="intrinsic"
@@ -84,7 +84,7 @@ const locations = () => {
       </h3>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default locations
+export default locations;

@@ -1,7 +1,7 @@
-import Footer from "../components/Footer"
-import NavBar from "../components/NavBar"
-import NewPatientPageStyles from "../styles/NewPatient.module.css"
-import Head from "next/head"
+import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
+import NewPatientPageStyles from "../styles/NewPatient.module.css";
+import Head from "next/head";
 
 const newPatientForm = () => {
   return (
@@ -10,7 +10,7 @@ const newPatientForm = () => {
         <title>New Patients - Midsouth Neurology</title>
       </Head>
       <NavBar />
-      <section className="bg-[url('/newPatient.png')] bg-contain bg-no-repeat bg-local opacity-100 h-96 py-96 lg:bg-cover ">
+      <section className="md:bg-[url('/newPatient.png')] bg-contain bg-no-repeat bg-local opacity-100 md:h-96 md:py-96 lg:bg-cover sm:bg-none py-6 sm:py-6">
         {" "}
         <h1 className={NewPatientPageStyles.head}>
           Are you a new patient of Dr. Owens?{" "}
@@ -32,7 +32,7 @@ const newPatientForm = () => {
         </article>{" "}
       </section>
       <h3 className={NewPatientPageStyles.text}>
-        <p className="text-white text-4xl underline mb-8">
+        <p className="text-white md:text-4xl underline md:mb-8 text-3xl sm:text-3xl">
           <br />
           What should I bring when I come?
         </p>
@@ -66,7 +66,7 @@ const newPatientForm = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default newPatientForm
+export default newPatientForm;

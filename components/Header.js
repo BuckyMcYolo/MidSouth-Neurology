@@ -1,13 +1,13 @@
-import HeaderStyles from "../styles/Header.module.css"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { useState } from "react"
+import HeaderStyles from "../styles/Header.module.css";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Header = () => {
-  const [is1Open, set1Open] = useState(false)
-  const [is2Open, set2Open] = useState(false)
-  const [is3Open, set3Open] = useState(false)
-  const [is4Open, set4Open] = useState(false)
+  const [is1Open, set1Open] = useState(false);
+  const [is2Open, set2Open] = useState(false);
+  const [is3Open, set3Open] = useState(false);
+  const [is4Open, set4Open] = useState(false);
 
   return (
     <motion.div data-isOpen={is1Open} layout className={HeaderStyles.div}>
@@ -56,7 +56,7 @@ const Header = () => {
             Epilepsy{" "}
             <article className={HeaderStyles.expand}>(click to expand)</article>
             <p className={HeaderStyles.hidden}>
-              We have an EEG and VRP lab on site and use the latest cutting edge
+              We have an EEG lab on site and use the latest cutting edge
               technology to rule out if you have any abnormal electrical
               activity in your brain.
             </p>
@@ -78,7 +78,7 @@ const Header = () => {
         </ul>{" "}
       </h3>
     </motion.div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
