@@ -4,4 +4,4 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 This is a static website (my first real one) for a small medical clinic made with NextJs
 
-Check it out here! [midsouthneurology.com](https://midsouthneurology.com/) for more details.
+Check it out here! [midsouthneurology.com](https://midsouthneurology.com/)
