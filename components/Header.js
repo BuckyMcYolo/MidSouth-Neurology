@@ -1,19 +1,19 @@
-import HeaderStyles from "../styles/Header.module.css"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { useState } from "react"
+import HeaderStyles from "../styles/Header.module.css";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Header = () => {
-  const [is1Open, set1Open] = useState(false)
-  const [is2Open, set2Open] = useState(false)
-  const [is3Open, set3Open] = useState(false)
-  const [is4Open, set4Open] = useState(false)
+  const [is1Open, set1Open] = useState(false);
+  const [is2Open, set2Open] = useState(false);
+  const [is3Open, set3Open] = useState(false);
+  const [is4Open, set4Open] = useState(false);
 
   return (
     <motion.div data-isOpen={is1Open} layout className={HeaderStyles.div}>
       <h1 className={HeaderStyles.title}>
         MidSouth <span> Neurology </span>
-        <Image src="/logo-again.png" width={60} height={65} />
+        <Image src="/logo-again.png" width={64} height={74} />
       </h1>
       <h3 className="text-2xl text-center">
         <ul className="font-bold pb-8 md">William E. Owens, MD</ul>
@@ -78,7 +78,7 @@ const Header = () => {
         </ul>{" "}
       </h3>
     </motion.div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

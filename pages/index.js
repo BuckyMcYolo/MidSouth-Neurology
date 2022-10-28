@@ -11,8 +11,11 @@ export default function Home() {
   return (
     <div className="bg-[url('/brainBackground.jpg')] bg-fixed opacity-100">
       <Head>
-        <title>MidSouth Neurology</title>
-        <meta name="description" content="Neurology" />
+        <title>MidSouth Neurology - Corinth and Tupelo Neurology Clinic </title>
+        <meta
+          name="description"
+          content="Tupelo Neurology and Corinth Neurology.  "
+        />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -48,10 +51,11 @@ export default function Home() {
       </section>
       <Header />
       <article className={Homestyles.article}>
-        <p className={Homestyles.statement}>
+        <h1 className={Homestyles.statement}>
           Providing exceptional Neurology service to Northeast Mississippi and
-          surrounding areas for over 18 years{" "}
-        </p>
+          surrounding areas for over 18 years. Come see us in our Tupelo or
+          Corinth Offices.{" "}
+        </h1>
         <p className={Homestyles.aboutUs}>
           We offer a broad range of Neurological services such as state of the
           art diagnostic testing equipment, medications and injections for
@@ -66,7 +70,7 @@ export default function Home() {
             }}
             whileTap={{ scale: 0.97 }}
           >
-            <Link href="/services">Learn more</Link>
+            <Link href="/services">Learn more about our services</Link>
           </motion.button>
         </p>
       </article>

@@ -1,7 +1,7 @@
-import FooterStyles from "../styles/Footer.module.css"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import Footer2 from "./Footer2"
+import FooterStyles from "../styles/Footer.module.css";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import Footer2 from "./Footer2";
 
 const Footer = () => {
   return (
@@ -12,6 +12,7 @@ const Footer = () => {
             src="/Midsouth_Large_logo.png"
             width={300}
             height={125}
+            alt="Midsouth Neurology logo"
           ></Image>
         </h3>{" "}
         <span>
@@ -72,7 +73,7 @@ const Footer = () => {
       </footer>
       <Footer2 />
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
