@@ -11,7 +11,9 @@ export default function Home() {
   return (
     <div className="bg-[url('/brainBackground.jpg')] bg-fixed opacity-100">
       <Head>
-        <title>MidSouth Neurology - Corinth and Tupelo Neurology Clinic </title>
+        <title>
+          MidSouth Neurology - Home - Corinth and Tupelo Neurology Clinic{" "}
+        </title>
         <meta
           name="description"
           content="Tupelo Neurology and Corinth Neurology.  "

@@ -41,10 +41,7 @@ const Footer = () => {
             whileTap={{ scale: 0.97 }}
           >
             {" "}
-            <a
-              href="https://mychart.baptistonecare.org/prd/Authentication/Login?"
-              target="_blank"
-            >
+            <a href="https://mychart.baptistonecare.org/prd/Authentication/Login?">
               {" "}
               MyChart{" "}
             </a>{" "}
@@ -54,7 +51,7 @@ const Footer = () => {
           Contact Us:
           <a
             href="tel:6623969447"
-            class=" text-black  hover:text-blue-500 active:text-blue-400 rounded-full px-5  text-center "
+            className=" text-black  hover:text-blue-500 active:text-blue-400 rounded-full px-5  text-center "
           >
             <motion.button
               className={FooterStyles.mychartbtn}

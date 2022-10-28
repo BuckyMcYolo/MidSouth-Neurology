@@ -56,7 +56,7 @@ const Header = () => {
             Epilepsy{" "}
             <article className={HeaderStyles.expand}>(click to expand)</article>
             <p className={HeaderStyles.hidden}>
-              We have an EEG and VRP lab on site and use the latest cutting edge
+              We have an EEG lab on site and use the latest cutting edge
               technology to rule out if you have any abnormal electrical
               activity in your brain.
             </p>

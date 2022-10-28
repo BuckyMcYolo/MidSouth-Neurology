@@ -1,12 +1,11 @@
-import Navlinks from "./Navlinks";
-import navStyles from "../styles/Nav.module.css";
-import Hamburger from "hamburger-react";
-import { useEffect, useState } from "react";
+import Navlinks from "./Navlinks"
+import navStyles from "../styles/Nav.module.css"
+import Hamburger from "hamburger-react"
+import { useEffect, useState } from "react"
 
 const MobileNav = () => {
-  const [isOpen, setOpen] = useState(false);
-  const animateFrom = { opacity: 0, y: -40 };
-  const animateTo = { opacity: 1, y: 0 };
+  const [isOpen, setOpen] = useState(false)
+
   return (
     <nav className={navStyles.mobileNav}>
       {" "}
@@ -20,7 +19,7 @@ const MobileNav = () => {
       </div>
       {isOpen && <Navlinks />}
     </nav>
-  );
-};
+  )
+}
 
-export default MobileNav;
+export default MobileNav

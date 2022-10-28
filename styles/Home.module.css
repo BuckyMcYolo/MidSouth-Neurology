@@ -62,19 +62,19 @@
     padding: 20px 2rem;
   }
 }
-@media (max-width: 650px) {
+@media (max-width: 768px) {
   .statement {
     font-size: 2rem;
-    padding: 10rem 0px 0px 0px;
+    padding: 14rem 0px 0px 0px;
     display: flex;
     text-align: center;
     margin: 0;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 450px) {
   .statement {
     font-size: 2rem;
-    padding-top: 30rem;
+    padding-top: 33rem;
     display: flex;
     text-align: center;
     margin: 0;
