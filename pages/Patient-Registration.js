@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import { Container, Paper, TextField, ButtonClasses } from "@mui/material";
+import { Container, Paper, TextField, MenuItem } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import NavBar from "../components/NavBar";
+import formStyles from "../styles/patientRegistration.module.css";
 
 const PatientRegistration = () => {
+  const [date, setDate] = React.useState("");
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -18,7 +21,11 @@ const PatientRegistration = () => {
       pcp: "",
       phone: "",
       email: "",
+      prefferedContact: "phone",
       dob: "",
+      insuredName: "",
+      insuredSocial: "",
+      insuredDOB: "",
     },
     validationSchema: yup.object({
       firstName: yup.string().required("Required"),
@@ -30,7 +37,7 @@ const PatientRegistration = () => {
       social: yup.string().required("Required"),
       pcp: yup.string().required("Required"),
       phone: yup.string().required("Required"),
-      email: yup.string().required("Required"),
+      email: yup.string().required("Required").email("Invalid email address"),
       dob: yup.string().required("Required"),
     }),
     onSubmit: (values) => {
@@ -38,13 +45,21 @@ const PatientRegistration = () => {
     },
   });
 
+  const name = formik.values.firstName + " " + formik.values.lastName;
+
+  useEffect(() => {
+    const today = new Date();
+    const date = today.toLocaleDateString("en-US");
+    setDate(date);
+  }, []);
+
   return (
     <div>
       <NavBar />
       <Container>
         <Paper>
           <Container className="flex flex-col items-center mt-8 text-lg md:text-xl">
-            <h1 className="text-xl md:text-2xl underline underline-offset-8 pb-4">
+            <h1 className="text-xl md:text-2xl underline underline-offset-8 py-4">
               Patient Registration Form
             </h1>
             <h2>
@@ -65,9 +80,7 @@ const PatientRegistration = () => {
               <header className="flex flex-col items-center pb-4">
                 <h1 className="text-xl md:text-2xl">Mid-South Neurology</h1>
                 <div className="text-lg md:text-xl">Dr. William Owens</div>
-                <div className="text-base md:text-lg">
-                  Date: {new Date().toDateString()}
-                </div>
+                <div className="text-base md:text-lg">Date: {date}</div>
               </header>
               <h2 className="text-xl md:text-2xl underline underline-offset-8 pb-4">
                 Patient Demographics
@@ -209,7 +222,6 @@ const PatientRegistration = () => {
                   <div>
                     <label htmlFor="address">Street Address: </label>
                     <TextField
-                      x
                       id="address"
                       name="address"
                       type="text"
@@ -307,6 +319,151 @@ const PatientRegistration = () => {
                       }
                     />
                   </div>
+                </div>
+                <div>
+                  <h2 className="text-xl md:text-2xl underline underline-offset-8 py-4 text-center">
+                    Contact information
+                  </h2>
+                  <div>
+                    <label htmlFor="phone">Phone: </label>
+                    <TextField
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.phone}
+                      size="small"
+                      variant="standard"
+                      FormHelperTextProps={{
+                        className: "text-red-500",
+                      }}
+                      helperText={
+                        formik.touched.phone && formik.errors.phone
+                          ? formik.errors.phone
+                          : null
+                      }
+                      error={
+                        formik.touched.phone && formik.errors.phone
+                          ? true
+                          : false
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email">Email: </label>
+                    <TextField
+                      id="email"
+                      name="email"
+                      type="email"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.email}
+                      size="small"
+                      variant="standard"
+                      FormHelperTextProps={{
+                        className: "text-red-500",
+                      }}
+                      helperText={
+                        formik.touched.email && formik.errors.email
+                          ? formik.errors.email
+                          : null
+                      }
+                      error={
+                        formik.touched.email && formik.errors.email
+                          ? true
+                          : false
+                      }
+                    />
+                  </div>
+                  <div className="text-center md:text-start  mb-3 md:mb-0">
+                    <label htmlFor="prefferedContact">
+                      Preffered Contact Method:{" "}
+                    </label>
+
+                    <TextField
+                      select
+                      className="ml-2  mt-3 md:mt-0"
+                      variant="standard"
+                      id="prefferedContact"
+                      name="prefferedContact"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.prefferedContact}
+                      size="small"
+                    >
+                      <MenuItem value="phone">Phone</MenuItem>
+                      <MenuItem value="text">Text</MenuItem>
+                      <MenuItem value="email">Email</MenuItem>
+                    </TextField>
+                  </div>
+                  <div className="py-3">
+                    **If Your insurance is under someone else such as a spouse
+                    or parent please provide the following: **
+                  </div>
+                  <section className="grid grid-cols-1 md:grid-cols-3">
+                    <div>
+                      <label htmlFor="insuredName">Insured Name: </label>
+                      <TextField
+                        id="insuredName"
+                        name="insuredName"
+                        type="text"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.insuredName}
+                        size="small"
+                        variant="standard"
+                      />
+                    </div>
+                    <div className="flex flex-col items-start md:flex-row md:items-center">
+                      {" "}
+                      <label htmlFor="insuredDOB">Insured DOB: </label>
+                      <TextField
+                        className="mt-2 md:ml-2"
+                        id="insuredDOB"
+                        name="insuredDOB"
+                        type="date"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.insuredDOB}
+                        size="small"
+                        variant="standard"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="insuredSocial">Insured Social: </label>
+                      <TextField
+                        id="insuredSocial"
+                        name="insuredSocial"
+                        type="number"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.insuredSocial}
+                        size="small"
+                        variant="standard"
+                      />
+                    </div>
+                  </section>
+                  <p className="italic py-4 px-4 text-sm md:text-base">
+                    I have completed this form entirely and certify that I am
+                    the patient or duly authorized agent of the patient to
+                    furnish the information requested. I understand that even
+                    though I may have insurance coverage, I am ultimately
+                    responsible for the payment of services rendered.
+                  </p>
+                  <p>
+                    Patient/Responsible Party Signature:{" "}
+                    <TextField
+                      inputProps={{ style: { fontFamily: "Great Vibes" } }}
+                      type="text"
+                      onBlur={formik.handleBlur}
+                      size="small"
+                      value={name}
+                      variant="standard"
+                      className="ml-10"
+                    ></TextField>
+                  </p>
+                  <p className={formStyles.signature}>hello</p>
                 </div>
               </section>
             </form>

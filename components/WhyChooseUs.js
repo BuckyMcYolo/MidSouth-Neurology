@@ -1,6 +1,7 @@
 import Link from "next/link";
 import boxElements from "../styles/ChooseUs.module.css";
 import { motion } from "framer-motion";
+import { Button } from "@mui/material";
 
 export const whyChooseUs = () => {
   return (
@@ -20,8 +21,14 @@ export const whyChooseUs = () => {
           TN.
           <br />
           <Link href="/locations">
-            <a className="text-xl md:text-2xl underline text-blue-700 hover:text-blue-500 active:text-blue-400">
-              See Map
+            <a>
+              <Button
+                variant="contained"
+                color="primary"
+                className="bg-blue-500 text-white hover:bg-blue-600"
+              >
+                See Map
+              </Button>
             </a>
           </Link>
         </p>
@@ -31,11 +38,14 @@ export const whyChooseUs = () => {
           stroke, seizure, syncope, or head trauma please call 911 as soon as
           possible. If you are calling about a regular visit click here
           <br />
-          <a
-            href="tel:6623969447"
-            className=" text-blue-700 underline hover:text-blue-500 active:text-blue-400 rounded-full px-5 py-2 "
-          >
-            Contact Us
+          <a href="tel:6623969447">
+            <Button
+              variant="contained"
+              color="primary"
+              className="bg-blue-500 text-white hover:bg-blue-600"
+            >
+              Contact Us
+            </Button>
           </a>
         </p>
         <p className="text-xl md:text-2xl mx-0.5 leading-loose text-zinc-50 bg-slate-600 text-center">
@@ -43,8 +53,14 @@ export const whyChooseUs = () => {
           appointment with us
           <br />
           <Link href="/resources">
-            <a className=" text-xl underline text-blue-400 hover:text-blue-600 active:text-blue-400 rounded-full px-5 py-2 ">
-              Resources
+            <a>
+              <Button
+                variant="contained"
+                color="primary"
+                className="bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Resources
+              </Button>
             </a>
           </Link>
         </p>
