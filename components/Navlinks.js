@@ -17,7 +17,7 @@ const Navlinks = () => {
           <Link href="/locations"> Locations</Link>
         </li>
         <li className={navStyles.nav_link}>
-          <Link href="/newPatientForm">New Patients</Link>{" "}
+          <Link href="/NewPatientForm">New Patients</Link>{" "}
         </li>{" "}
       </ul>{" "}
     </nav>
