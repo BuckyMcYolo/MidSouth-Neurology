@@ -73,10 +73,18 @@
 }
 @media (max-width: 450px) {
   .statement {
-    font-size: 2rem;
+    font-size: 1.3rem;
     padding-top: 33rem;
     display: flex;
     text-align: center;
     margin: 0;
+  }
+
+  .aboutUs {
+    font-size: 1rem;
+  }
+  .servicesButton {
+    font-size: 14px;
+    padding: 10px;
   }
 }

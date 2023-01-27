@@ -12,19 +12,20 @@ export const whyChooseUs = () => {
         transition={{ duration: 1.8 }}
         viewport={{ once: true }}
       >
+        {/* do not delete this p */}
         <p></p>
-        <p className="text-3xl mx-0.5 leading-relaxed text-zinc-50 bg-slate-400 text-center">
+        <p className="text-xl md:text-2xl mx-0.5 leading-relaxed text-zinc-50 bg-slate-400 text-center">
           Here at MidSouth Neurology we provide comprehensive neurological care
           to patients in a 150 mile radius all across north east MS and southern
           TN.
           <br />
           <Link href="/locations">
-            <a className="text-2xl underline text-blue-600 hover:text-blue-500 active:text-blue-400 rounded-full px-5 py-2 ">
+            <a className="text-xl md:text-2xl underline text-blue-700 hover:text-blue-500 active:text-blue-400">
               See Map
             </a>
           </Link>
         </p>
-        <p className="text-2xl mx-0.5 leading-loose text-zinc-50  bg-slate-500 text-center">
+        <p className="text-xl md:text-2xl mx-0.5 leading-loose text-zinc-50  bg-slate-500 text-center">
           {" "}
           If you think you are having an emergency neurological problem such as
           stroke, seizure, syncope, or head trauma please call 911 as soon as
@@ -37,12 +38,12 @@ export const whyChooseUs = () => {
             Contact Us
           </a>
         </p>
-        <p className="text-3xl mx-0.5 leading-loose text-zinc-50 bg-slate-600 text-center">
+        <p className="text-xl md:text-2xl mx-0.5 leading-loose text-zinc-50 bg-slate-600 text-center">
           Some of the most common reasons why someone may need to make an
           appointment with us
           <br />
           <Link href="/resources">
-            <a className="text-2xl underline text-blue-500 hover:text-blue-600 active:text-blue-400 rounded-full px-5 py-2 ">
+            <a className=" text-xl underline text-blue-400 hover:text-blue-600 active:text-blue-400 rounded-full px-5 py-2 ">
               Resources
             </a>
           </Link>

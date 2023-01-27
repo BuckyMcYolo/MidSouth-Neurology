@@ -1,8 +1,11 @@
 import Link from "next/link";
 import navStyles from "../styles/Nav.module.css";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const Navlinks = () => {
+  const router = useRouter();
+  router.pathname === "/" ? console.log("home") : console.log("not home");
   return (
     <nav className={navStyles.nav}>
       {" "}
