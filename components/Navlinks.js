@@ -10,16 +10,41 @@ const Navlinks = () => {
     <nav className={navStyles.nav}>
       {" "}
       <ul className={navStyles.nav_menu}>
-        <li className={navStyles.nav_link}>
+        <li
+          className={
+            router.pathname == "/"
+              ? navStyles.nav_link_current
+              : navStyles.nav_link
+          }
+        >
           <Link href="/">Home</Link>
         </li>
-        <li className={navStyles.nav_link}>
+        <li
+          className={
+            router.pathname == "/services"
+              ? navStyles.nav_link_current
+              : navStyles.nav_link
+          }
+        >
           <Link href="/services">Our Services</Link>{" "}
         </li>
-        <li className={navStyles.nav_link}>
+        <li
+          className={
+            router.pathname == "/locations"
+              ? navStyles.nav_link_current
+              : navStyles.nav_link
+          }
+        >
           <Link href="/locations"> Locations</Link>
         </li>
-        <li className={navStyles.nav_link}>
+        <li
+          className={
+            router.pathname == "/NewPatientForm" ||
+            router.pathname == "/Patient-Registration"
+              ? navStyles.nav_link_current
+              : navStyles.nav_link
+          }
+        >
           <Link href="/NewPatientForm">New Patients</Link>{" "}
         </li>{" "}
       </ul>{" "}
