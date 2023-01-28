@@ -17,7 +17,7 @@
 }
 .nav li:hover {
   /* opacity: .75; */
-  color: rgb(222, 94, 115);
+  color: #de5e73;
 }
 .nav li:active {
   opacity: 0.5;

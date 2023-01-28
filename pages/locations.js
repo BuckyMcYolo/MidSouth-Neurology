@@ -79,8 +79,7 @@ const Locations = () => {
           <div className=" py-4 text-base md:text-xl lg:text-2xl text-center p-2">
             <ul>
               <li>
-                We are located on the corner of Harper road and Proper Street,
-                next to Dr. Pratts office.
+                We are located on the corner of Harper road and Proper Street.
               </li>
               <li> Phone: 662-396-9447</li>
               <li>Fax: 662-396-9449</li>

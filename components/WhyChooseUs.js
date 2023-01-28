@@ -25,7 +25,7 @@ export const whyChooseUs = () => {
               <Button
                 variant="contained"
                 color="primary"
-                className="bg-blue-500 text-white hover:bg-blue-600"
+                className="bg-blue-500 text-white hover:bg-blue-600 mt-4"
               >
                 See Map
               </Button>
@@ -42,7 +42,7 @@ export const whyChooseUs = () => {
             <Button
               variant="contained"
               color="primary"
-              className="bg-blue-500 text-white hover:bg-blue-600"
+              className="bg-blue-500 text-white hover:bg-blue-600 mt-2"
             >
               Contact Us
             </Button>
@@ -57,7 +57,7 @@ export const whyChooseUs = () => {
               <Button
                 variant="contained"
                 color="primary"
-                className="bg-blue-500 text-white hover:bg-blue-600"
+                className="bg-blue-500 text-white hover:bg-blue-600 mt-4"
               >
                 Resources
               </Button>
