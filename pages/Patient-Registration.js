@@ -1375,12 +1375,23 @@ const PatientRegistration = () => {
                         id="dob"
                         name="dob"
                         label="Date of Surgery"
+                        disabled={
+                          selectedSurgicalHistory == "" ||
+                          selectedSurgicalHistory.length < 2
+                        }
                         value={selectedSurgicalHistoryDate}
                         onChange={(date) =>
                           setSelectedSurgicalHistoryDate(date)
                         }
                         renderInput={(params) => (
-                          <TextField {...params} size="small" />
+                          <TextField
+                            {...params}
+                            size="small"
+                            error={
+                              selectedSurgicalHistoryDate == null &&
+                              selectedSurgicalHistory != ""
+                            }
+                          />
                         )}
                       />{" "}
                       <Button
