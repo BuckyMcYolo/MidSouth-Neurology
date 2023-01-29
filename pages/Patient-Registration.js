@@ -23,10 +23,10 @@ import {
   TableContainer,
   TableHead,
   Autocomplete,
-  CircularProgress,
-  Card,
-  CardContent,
-  CardActionArea,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  FormControl,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -35,7 +35,7 @@ import { SiDocusign } from "react-icons/si";
 import { MdUploadFile, MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useQuery } from "react-query";
-import { QueryClient } from "react-query";
+import { data } from "autoprefixer";
 
 const PatientRegistration = () => {
   const [display, setDisplay] = React.useState(1);
@@ -47,17 +47,24 @@ const PatientRegistration = () => {
   const [date1Signed, setDate1Signed] = React.useState("");
   const [sign1Error, setSign1Error] = React.useState(false);
   //second page
-  const [allergyNum, setAllergyNum] = React.useState([]);
   const [allergyArray, setAllergyArray] = React.useState([]);
-  const [allergyReactionArray, setAllergyReactionArray] = React.useState([]);
-  const [allergyFullArray, setAllergyFullArray] = React.useState([]);
+  const [selectedAllergy, setSelectedAllergy] = React.useState("");
+  const [selectedAllergyReaction, setSelectedAllergyReaction] =
+    React.useState("");
   const [terms, setTerms] = React.useState("");
-  const [medlist, setMedList] = React.useState([]);
-  const [medicationArray, setMedicationArray] = React.useState([]);
-  const [medicationDosageArray, setMedicationDosageArray] = React.useState([]);
   const [medicationFullArray, setMedicationFullArray] = React.useState([]);
   const [selectedMed, setSelectedMed] = React.useState(null);
-  const [firstLoading, setFirstLoading] = React.useState(true);
+  const [selectedDosage, setSelectedDosage] = React.useState(null);
+  const [selectedFrequency, setSelectedFrequency] = React.useState("Daily");
+  const [selectedMedicalCondition, setSelectedMedicalCondition] =
+    React.useState("");
+  const [medicalHistoryArray, setMedicalHistoryArray] = React.useState([]);
+  const [selectedSurgicalHistory, setSelectedSurgicalHistory] =
+    React.useState("");
+  const [selectedSurgicalHistoryDate, setSelectedSurgicalHistoryDate] =
+    React.useState("");
+  const [surgicalHistoryArray, setSurgicalHistoryArray] = React.useState([]);
+
   //third page
   const [sign3, setSign3] = React.useState(false);
   const [is3Signed, setIs3Signed] = React.useState(false);
@@ -79,11 +86,6 @@ const PatientRegistration = () => {
       `https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS&maxList&terms=${terms}}`
     );
     const data = await res.json();
-    console.log(data);
-    const medArray = data[1].map((med) => {
-      return med;
-    });
-    setMedList(medArray);
     return data;
   };
 
@@ -153,10 +155,10 @@ const PatientRegistration = () => {
       heightFt: "",
       heightIn: "",
       weight: "",
-      medications: "",
-      medicalHistory: "",
-      surgicalHistory: "",
-      familyHistory: "",
+      medications: [],
+      medicalHistory: [],
+      surgicalHistory: [],
+      familyHistory: [],
       useTobaccoBool: false,
       useCiggarrettes: false,
       useCigars: false,
@@ -179,10 +181,6 @@ const PatientRegistration = () => {
       heightFt: yup.number().required("Required"),
       heightIn: yup.number().required("Required"),
       weight: yup.string().required("Required"),
-      medications: yup.string().required("Required"),
-      medicalHistory: yup.string().required("Required"),
-      surgicalHistory: yup.string().required("Required"),
-      familyHistory: yup.string().required("Required"),
       pastImaging: yup.string().required("Required"),
       pastImagingLocation: yup.string().required("Required"),
     }),
@@ -267,17 +265,17 @@ const PatientRegistration = () => {
     setTerms(newValue);
   };
   const handleValueChange = (event, newValue) => {
-    setMedicationArray(newValue);
+    setSelectedMed(newValue);
   };
 
-  const { data, isLoading, error, isError } = useQuery(
-    ["dosages", medicationArray, selectedMed],
-    () => getMedicationDosage(selectedMed),
+  console.log(selectedMed);
 
-    { enabled: selectedMed !== null, refetchOnWindowFocus: true }
-  );
-
-  const { data: data2 } = useQuery(["medications", terms], getMeds, {
+  const {
+    data: fetchedMeds,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(["medications", terms], getMeds, {
     refetchOnWindowFocus: true,
   });
 
@@ -984,215 +982,510 @@ const PatientRegistration = () => {
                       />
                     </div>{" "}
                   </article>
-                  <div className="flex flex-col items-center py-3 ">
-                    <div className="flex flex-row items-center">
-                      <InputLabel htmlFor="allergies">Allergies</InputLabel>
-                      <IconButton
-                        onClick={() => {
-                          setAllergyNum([...allergyNum, ""]);
-                        }}
-                        className="text-blue-500 ml-1"
-                      >
-                        <MdAddCircleOutline size={25} />
-                      </IconButton>
-                    </div>
-                    <div className="sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                      {allergyNum.length == 0
-                        ? null
-                        : allergyNum.map((allergy, index) => (
-                            <div
-                              key={index}
-                              className="flex sm:flex-col items-center flex-row "
-                            >
-                              <div className="border-black flex flex-col items-center border border-solid my-3 p-5 rounded-xl">
-                                <TextField
-                                  className="w-36 ml-2 mb-3"
-                                  id={"allergies" + index}
-                                  name={"allergies" + index}
-                                  value={allergyArray[index]}
-                                  onChange={(e) => {
-                                    let temp = [...allergyArray];
-                                    temp[index] = e.target.value;
-                                    setAllergyArray(temp);
-                                  }}
-                                  type="text"
-                                  size="small"
-                                  variant="standard"
-                                />
-                                {console.log(allergyArray)}
-                                {console.log(allergyReactionArray)}
-                                <TextField
-                                  className="w-36 ml-2 mt-3"
-                                  id={"allergyReaction" + index}
-                                  name={"allergyReaction" + index}
-                                  type="text"
-                                  size="small"
-                                  value={allergyReactionArray[index]}
-                                  onChange={(e) => {
-                                    let temp = [...allergyReactionArray];
-                                    temp[index] = e.target.value;
-                                    setAllergyReactionArray(temp);
-                                  }}
-                                  variant="standard"
-                                  select
-                                >
-                                  <MenuItem value="Itching">Itching</MenuItem>
-                                  <MenuItem value="Hives">Hives</MenuItem>
-                                  <MenuItem value="Rash">Rash</MenuItem>
-                                  <MenuItem value="Swelling">Swelling</MenuItem>
-                                  <MenuItem value="Wheezing">Wheezing</MenuItem>
-                                  <MenuItem value="Anaphylaxis">
-                                    Anaphylaxis
-                                  </MenuItem>
-                                  <MenuItem value="Sneezing">Sneezing</MenuItem>
-                                </TextField>
-                              </div>
-                              <IconButton
-                                className="ml-2"
-                                onClick={() => {
-                                  let temp = [...allergyNum];
-                                  temp.splice(index, 1);
-                                  setAllergyNum(temp);
-                                  setAllergyArray(
-                                    allergyArray.filter((_, i) => i !== index)
-                                  );
-                                  setAllergyReactionArray(
-                                    allergyReactionArray.filter(
-                                      (_, i) => i !== index
-                                    )
-                                  );
-                                }}
-                              >
-                                {" "}
-                                <MdDelete className="text-red-500" size={25} />
-                              </IconButton>
-                            </div>
-                          ))}
-                    </div>
-                  </div>
-                  <div>
+
+                  <div className="pb-10">
                     <InputLabel
-                      className="text-center text-xl pb-3"
+                      className="text-center text-xl pb-3 underline underline-offset-8"
+                      htmlFor="allergies"
+                    >
+                      Allergies
+                    </InputLabel>
+                    <div className="flex flex-col md:flex-row items-center justify-center">
+                      <TextField
+                        label="Allergy"
+                        className="my-3 md:mr-2"
+                        id={"allergies"}
+                        name={"allergies"}
+                        type="text"
+                        size="small"
+                        value={selectedAllergy}
+                        onChange={(e) => setSelectedAllergy(e.target.value)}
+                      />
+                      <TextField
+                        label="Reaction"
+                        className="w-36 mb-3 md:my-0 md:mr-2"
+                        id="allergyReaction"
+                        name="allergyReaction"
+                        size="small"
+                        select
+                        value={selectedAllergyReaction}
+                        onChange={(e) =>
+                          setSelectedAllergyReaction(e.target.value)
+                        }
+                      >
+                        <MenuItem value="Itching">Itching</MenuItem>
+                        <MenuItem value="Hives">Hives</MenuItem>
+                        <MenuItem value="Rash">Rash</MenuItem>{" "}
+                        <MenuItem value="Sneezing">Sneezing</MenuItem>
+                        <MenuItem value="Swelling">Swelling</MenuItem>
+                        <MenuItem value="Wheezing">Wheezing</MenuItem>
+                        <MenuItem value="Anaphylaxis">Anaphylaxis</MenuItem>
+                      </TextField>
+                      <Button
+                        disabled={
+                          selectedAllergy === "" ||
+                          selectedAllergy.length < 2 ||
+                          selectedAllergyReaction === ""
+                        }
+                        variant="outlined"
+                        className=""
+                        endIcon={<MdAddCircleOutline />}
+                        onClick={() => {
+                          setAllergyArray([
+                            ...allergyArray,
+                            {
+                              name: selectedAllergy,
+                              reaction: selectedAllergyReaction,
+                            },
+                          ]);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    <TableContainer
+                      component={Paper}
+                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      style={{ maxHeight: 300 }}
+                    >
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Allergy
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Reaction
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Delete
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {allergyArray.map((allergy, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {allergy.name}
+                              </TableCell>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {allergy.reaction}
+                              </TableCell>
+
+                              <TableCell className="p-2">
+                                <IconButton
+                                  onClick={() => {
+                                    setAllergyArray(
+                                      allergyArray.filter(
+                                        (allergy) =>
+                                          allergy !== allergyArray[index]
+                                      )
+                                    );
+                                  }}
+                                >
+                                  {" "}
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                  <div className="pb-12">
+                    <InputLabel
+                      className="text-center text-xl pb-3 underline underline-offset-8"
                       htmlFor="allergies"
                     >
                       Current Medications
                     </InputLabel>
-                    <div className="flex justify-center">
+                    <div className="flex flex-col md:flex-row md:justify-between items-center">
                       <Autocomplete
-                        limitTags={1}
-                        multiple={true}
+                        loading={isLoading || !fetchedMeds[1] ? true : false}
                         name="patientMeds"
                         id="patientMeds"
-                        value={medicationArray}
+                        value={selectedMed}
                         inputValue={terms}
                         onInputChange={handleInputChange}
                         onChange={handleValueChange}
-                        options={medlist}
-                        className="w-72 mb-6"
+                        options={fetchedMeds ? fetchedMeds[1] : []}
+                        className="w-60 md:w-60 mr-2 my-3 "
                         renderInput={(params) => (
                           <TextField
                             {...params}
                             variant="outlined"
                             label="Start typing to search"
+                            size="small"
                           />
                         )}
-                      />{" "}
-                    </div>
-                    <Table className="shadow-lg border border-black border-solid">
-                      <TableHead className="">
-                        <TableRow>
-                          <TableCell className="text-base sm:text-lg">
-                            Medication
-                          </TableCell>
-                          <TableCell className="text-base sm:text-lg">
-                            Dosage
-                          </TableCell>
-                          {/* <TableCell className="text-base sm:text-lg">
-                            Delete
-                          </TableCell> */}
-                        </TableRow>
-                      </TableHead>
-                      {console.log(selectedMed)}
-                      <TableBody>
-                        {medicationArray.map((medication, index) => (
-                          <TableRow key={index}>
-                            <TableCell className="w-1/2">
-                              {medication}
+                      />
+                      <TextField
+                        disabled={selectedMed ? false : true}
+                        className="w-60 md:w-40 mr-2 my-3 md:my-0"
+                        select
+                        size="small"
+                        label="Dosage"
+                        id="selectedDosage"
+                        name="selectedDosage"
+                        value={selectedDosage}
+                        onChange={(e) => {
+                          setSelectedDosage(e.target.value);
+                        }}
+                      >
+                        {fetchedMeds ? (
+                          fetchedMeds[2].STRENGTHS_AND_FORMS[0].map(
+                            (dosage) => (
+                              <MenuItem value={dosage}>{dosage}</MenuItem>
+                            )
+                          )
+                        ) : (
+                          <MenuItem value="No Dosage Available">
+                            No Dosage Available
+                          </MenuItem>
+                        )}
+                      </TextField>
+                      <TextField
+                        disabled={selectedMed ? false : true}
+                        className="w-60 md:w-40 mr-2 my-3 md:my-0"
+                        label="Frequency"
+                        select
+                        size="small"
+                        id="selectedFrequency"
+                        name="selectedFrequency"
+                        value={selectedFrequency}
+                        onChange={(e) => {
+                          setSelectedFrequency(e.target.value);
+                        }}
+                      >
+                        <MenuItem value="Daily">Daily</MenuItem>
+                        <MenuItem value="BID">Twice per day (BID)</MenuItem>
+                        <MenuItem value="TID">
+                          Three times per day (TID)
+                        </MenuItem>
+                        <MenuItem value="QID">
+                          Four times per day (QID)
+                        </MenuItem>
+                        <MenuItem value="QOD">Every other day (QOD)</MenuItem>
+                        <MenuItem value="PRN">As needed (prn)</MenuItem>
+                      </TextField>
+                      <div className="ml-2">
+                        <Button
+                          onClick={() => {
+                            let temp = [...medicationFullArray];
+                            temp.push({
+                              name: selectedMed,
+                              dosage: selectedDosage,
+                              frequency: selectedFrequency,
+                            });
+                            setMedicationFullArray(temp);
+                            setSelectedMed(null);
+                            setSelectedFrequency(null);
+                            setSelectedDosage("No Dosage Available");
+                            setTerms("");
+                          }}
+                          disabled={
+                            selectedMed == null || selectedFrequency == null
+                              ? true
+                              : false
+                          }
+                          variant="outlined"
+                          endIcon={<MdAddCircleOutline />}
+                          className=""
+                        >
+                          add
+                        </Button>{" "}
+                      </div>
+                    </div>{" "}
+                    <TableContainer
+                      component={Paper}
+                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      style={{ maxHeight: 300 }}
+                    >
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Medication
                             </TableCell>
-                            <TableCell className="w-1/2">
-                              <Button
-                                className="bg-blue-500 text-white text-sm"
-                                variant="contained"
-                                size="small"
-                                onClick={() => {
-                                  setSelectedMed(medication);
-                                }}
-                              >
-                                dosage
-                              </Button>
-                              {/* <TextField
-                                className="w-1/2 ml-2"
-                                id={"dosage" + index}
-                                name={"dosage" + index}
-                                size="small"
-                                onClick={() => setSelectedMed(medication)}
-                                disabled={selectedMed !== medication}
-                                onChange={(e) => {
-                                  let temp = [...medicationDosageArray];
-                                  temp[index] = e.target.value;
-                                  setMedicationDosageArray(temp);
-                                }}
-                                value={medicationDosageArray[index]}
-                              > */}
-                              {/* {isLoading || firstLoading ? (
-                                  <MenuItem className="flex justify-between">
-                                    Loading <CircularProgress size={20} />
-                                  </MenuItem>
-                                ) : data.length == 0 ? (
-                                  <MenuItem>No options available</MenuItem>
-                                ) : (
-                                  data.map((dosage, index) => (
-                                    <MenuItem
-                                      selected={
-                                        dosage == medicationDosageArray[index]
-                                      }
-                                      key={index}
-                                      onSelect={() => {
-                                        setSelectedMed("");
-                                        setFirstLoading(true);
-                                      }}
-                                      label={dosage}
-                                    >
-                                      {dosage}
-                                    </MenuItem>
-                                  ))
-                                )} */}
-                              {/* </TextField> */}
-                              <IconButton
-                                className="ml-2"
-                                onClick={() => {
-                                  if (index == 0) {
-                                    let temp = [...medicationArray];
-                                    temp.shift();
-                                    setMedicationArray(temp);
-                                  } else {
-                                    let temp2 = [...medicationArray];
-                                    temp2.splice(index, 1);
-                                    setMedicationArray(temp2);
-                                  }
-                                }}
-                              >
-                                {" "}
-                                <MdDelete className="text-red-500" size={25} />
-                              </IconButton>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Dosage
                             </TableCell>
-                            {/* <TableCell>
-                              
-                            </TableCell> */}
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Frequency
+                            </TableCell>
+                            <TableCell className="maxsm:hidden text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Delete
+                            </TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHead>
+                        <TableBody>
+                          {medicationFullArray.map((med, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {med.name}
+                              </TableCell>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {med.dosage}
+                              </TableCell>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {med.frequency}
+                                <IconButton
+                                  className="sm:hidden"
+                                  onClick={() => {
+                                    let temp = [...medicationFullArray];
+                                    temp.splice(index, 1);
+                                    setMedicationFullArray(temp);
+                                  }}
+                                >
+                                  {" "}
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                              <TableCell className="maxsm:hidden p-0">
+                                <IconButton
+                                  onClick={() => {
+                                    let temp = [...medicationFullArray];
+                                    temp.splice(index, 1);
+                                    setMedicationFullArray(temp);
+                                  }}
+                                >
+                                  {" "}
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+
+                  <div className="pb-12">
+                    <InputLabel className="text-center text-xl pb-3 underline underline-offset-8">
+                      Medical History
+                    </InputLabel>
+                    <div className="flex flex-col md:flex-row items-center justify-center">
+                      <TextField
+                        label="Medical Condition"
+                        className="my-3 md:mr-2"
+                        id={"medicalHistory"}
+                        name={"medicalHistory"}
+                        type="text"
+                        size="small"
+                        value={selectedMedicalCondition}
+                        onChange={(e) =>
+                          setSelectedMedicalCondition(e.target.value)
+                        }
+                      />
+
+                      <Button
+                        disabled={
+                          selectedMedicalCondition == "" ||
+                          selectedMedicalCondition.length < 2
+                        }
+                        variant="outlined"
+                        endIcon={<MdAddCircleOutline />}
+                        onClick={() => {
+                          let temp = [...medicalHistoryArray];
+                          temp.push({
+                            name: selectedMedicalCondition,
+                          });
+                          setMedicalHistoryArray(temp);
+                          setSelectedMedicalCondition("");
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    <TableContainer
+                      component={Paper}
+                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      style={{ maxHeight: 300 }}
+                    >
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Medical Condition
+                            </TableCell>
+
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Delete
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {medicalHistoryArray.map((history, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {history.name}
+                              </TableCell>
+
+                              <TableCell className="p-2">
+                                <IconButton
+                                  onClick={() => {
+                                    let temp = [...medicalHistoryArray];
+                                    temp.splice(index, 1);
+                                    setMedicalHistoryArray(temp);
+                                  }}
+                                >
+                                  {" "}
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+
+                  <div className="pb-12">
+                    <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
+                      Surgical History
+                    </InputLabel>
+                    <div className="flex flex-col md:flex-row items-center justify-center">
+                      <TextField
+                        label="Surgery / Procedure"
+                        className="mt-3 sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
+                        id={"surgicalHistory"}
+                        name={"surgicalHistory"}
+                        type="text"
+                        size="small"
+                        value={selectedSurgicalHistory}
+                        onChange={(e) =>
+                          setSelectedSurgicalHistory(e.target.value)
+                        }
+                      />
+                      <DatePicker
+                        className=" sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
+                        id="dob"
+                        name="dob"
+                        label="Date of Surgery"
+                        value={selectedSurgicalHistoryDate}
+                        onChange={(date) =>
+                          setSelectedSurgicalHistoryDate(date)
+                        }
+                        renderInput={(params) => (
+                          <TextField {...params} size="small" />
+                        )}
+                      />{" "}
+                      <Button
+                        className=" sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
+                        disabled={
+                          selectedSurgicalHistory == "" ||
+                          selectedSurgicalHistory.length < 2 ||
+                          selectedSurgicalHistoryDate == null
+                        }
+                        variant="outlined"
+                        endIcon={<MdAddCircleOutline />}
+                        onClick={() => {
+                          let temp = [...surgicalHistoryArray];
+                          temp.push({
+                            name: selectedSurgicalHistory,
+                            date: selectedSurgicalHistoryDate,
+                          });
+                          setSurgicalHistoryArray(temp);
+                          setSelectedSurgicalHistory("");
+                          setSelectedSurgicalHistoryDate(null);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    {console.log(surgicalHistoryArray)}
+                    <TableContainer
+                      component={Paper}
+                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      style={{ maxHeight: 300 }}
+                    >
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Surgery / Procedure
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Date
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Delete
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {surgicalHistoryArray.map((surgery, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {surgery.name}
+                              </TableCell>
+                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                                {new Date(surgery.date).toDateString()}
+                              </TableCell>
+                              <TableCell className="p-2">
+                                <IconButton
+                                  onClick={() => {
+                                    let temp = [...surgicalHistoryArray];
+                                    temp.splice(index, 1);
+                                    setSurgicalHistoryArray(temp);
+                                  }}
+                                >
+                                  {" "}
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                  <div className="pb-12">
+                    <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
+                      Family History
+                    </InputLabel>
+                  </div>
+                  <div className="pb-12">
+                    {" "}
+                    <FormControl>
+                      <FormLabel htmlFor="useTobaccoBool">
+                        Do you use tobacco products?
+                      </FormLabel>
+                      <RadioGroup
+                        id="useTobaccoBool"
+                        aria-label="tobacco"
+                        name="useTobaccoBool"
+                        value={formikHistory.values.useTobaccoBool}
+                        onChange={formikHistory.handleChange}
+                      >
+                        <FormControlLabel
+                          value={true}
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value={false}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                    </FormControl>
                   </div>
 
                   <div className="flex justify-between my-6">
@@ -1706,7 +1999,7 @@ const PatientRegistration = () => {
         >
           <Alert severity="error">Please fill out the required fields</Alert>
         </Snackbar>
-        {selectedMed && (
+        {/* {selectedMed && (
           <div>
             {" "}
             {isLoading ? (
@@ -1764,7 +2057,7 @@ const PatientRegistration = () => {
               </Dialog>
             )}
           </div>
-        )}
+        )} */}
 
         <Dialog open={sign1}>
           <DialogTitle className="text-center">
