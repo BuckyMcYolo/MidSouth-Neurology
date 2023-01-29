@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 const Navlinks = () => {
   const router = useRouter();
-  router.pathname === "/" ? console.log("home") : console.log("not home");
+
   return (
     <nav className={navStyles.nav}>
       {" "}

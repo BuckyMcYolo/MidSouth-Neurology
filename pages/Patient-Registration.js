@@ -14,21 +14,50 @@ import {
   IconButton,
   FormLabel,
   InputLabel,
+  Snackbar,
+  Alert,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableContainer,
+  TableHead,
+  Autocomplete,
+  CircularProgress,
+  Card,
+  CardContent,
+  CardActionArea,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import NavBar from "../components/NavBar";
 import { SiDocusign } from "react-icons/si";
-import { MdUploadFile } from "react-icons/md";
+import { MdUploadFile, MdAddCircleOutline, MdDelete } from "react-icons/md";
+import { DatePicker } from "@mui/x-date-pickers";
+import { useQuery } from "react-query";
+import { QueryClient } from "react-query";
 
 const PatientRegistration = () => {
   const [display, setDisplay] = React.useState(1);
+  const [isValid, setIsValid] = React.useState(true);
   //first page
   const [date, setDate] = React.useState("");
   const [sign1, setSign1] = React.useState(false);
   const [is1Signed, setIs1Signed] = React.useState(false);
   const [date1Signed, setDate1Signed] = React.useState("");
   const [sign1Error, setSign1Error] = React.useState(false);
+  //second page
+  const [allergyNum, setAllergyNum] = React.useState([]);
+  const [allergyArray, setAllergyArray] = React.useState([]);
+  const [allergyReactionArray, setAllergyReactionArray] = React.useState([]);
+  const [allergyFullArray, setAllergyFullArray] = React.useState([]);
+  const [terms, setTerms] = React.useState("");
+  const [medlist, setMedList] = React.useState([]);
+  const [medicationArray, setMedicationArray] = React.useState([]);
+  const [medicationDosageArray, setMedicationDosageArray] = React.useState([]);
+  const [medicationFullArray, setMedicationFullArray] = React.useState([]);
+  const [selectedMed, setSelectedMed] = React.useState(null);
+  const [firstLoading, setFirstLoading] = React.useState(true);
   //third page
   const [sign3, setSign3] = React.useState(false);
   const [is3Signed, setIs3Signed] = React.useState(false);
@@ -45,6 +74,28 @@ const PatientRegistration = () => {
   const [date5Signed, setDate5Signed] = React.useState("");
   const [sign5Error, setSign5Error] = React.useState(false);
 
+  const getMeds = async () => {
+    const res = await fetch(
+      `https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS&maxList&terms=${terms}}`
+    );
+    const data = await res.json();
+    console.log(data);
+    const medArray = data[1].map((med) => {
+      return med;
+    });
+    setMedList(medArray);
+    return data;
+  };
+
+  const getMedicationDosage = async (medication) => {
+    const res = await fetch(
+      `https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS&maxList&terms=${medication}}`
+    );
+    const data = await res.json();
+
+    return data[2].STRENGTHS_AND_FORMS[0];
+  };
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -57,42 +108,51 @@ const PatientRegistration = () => {
       pcp: "",
       phone: "",
       email: "",
-      prefferedContact: "phone",
+      prefferedContact: "",
       dob: "",
       insuredName: "",
       insuredSocial: "",
-      insuredDOB: "",
+      insuredDOB: null,
     },
-    validationSchema: yup.object({
-      firstName: yup.string().required("Required"),
-      lastName: yup.string().required("Required"),
-      address: yup.string().required("Required"),
-      city: yup.string().required("Required"),
-      state: yup.string().required("Required"),
-      zip: yup.string().required("Required"),
-      social: yup.string().required("Required"),
-      pcp: yup.string().required("Required"),
-      phone: yup.string().required("Required"),
-      email: yup.string().required("Required").email("Invalid email address"),
-      dob: yup.string().required("Required"),
-    }),
+    // validationSchema: yup.object({
+    //   firstName: yup.string().required("Required"),
+    //   lastName: yup.string().required("Required"),
+    //   address: yup.string().required("Required"),
+    //   city: yup.string().required("Required"),
+    //   state: yup.string().required("Required"),
+    //   zip: yup.string().required("Required"),
+    //   social: yup.string().required("Required"),
+    //   pcp: yup.string().required("Required"),
+    //   phone: yup.string().required("Required"),
+    //   email: yup.string().required("Required").email("Invalid email address"),
+    //   prefferedContact: yup.string().required("Required"),
+    //   dob: yup.string().required("Required").nullable(),
+    // }),
     onSubmit: () => {
-      if (!is1Signed) {
-        setSign1Error(true);
-      } else {
-        nextPage();
-      }
+      // if (!is1Signed) {
+      //   setSign1Error(true);
+      // } else {
+      nextPage();
+      // }
     },
   });
+
+  const form1submitHandler = (e) => {
+    e.preventDefault();
+    if (!formik.isValid) {
+      setIsValid(false);
+    }
+    formik.handleSubmit();
+  };
 
   const formikHistory = useFormik({
     initialValues: {
       reasonForVisit: "",
       refferringMD: "",
       pharmacy: "",
-      height: "",
+      heightFt: "",
+      heightIn: "",
       weight: "",
-      allergies: "",
       medications: "",
       medicalHistory: "",
       surgicalHistory: "",
@@ -116,9 +176,9 @@ const PatientRegistration = () => {
       reasonForVisit: yup.string().required("Required"),
       refferringMD: yup.string().required("Required"),
       pharmacy: yup.string().required("Required"),
-      height: yup.string().required("Required"),
+      heightFt: yup.number().required("Required"),
+      heightIn: yup.number().required("Required"),
       weight: yup.string().required("Required"),
-      allergies: yup.string().required("Required"),
       medications: yup.string().required("Required"),
       medicalHistory: yup.string().required("Required"),
       surgicalHistory: yup.string().required("Required"),
@@ -203,47 +263,69 @@ const PatientRegistration = () => {
     }
   };
 
+  const handleInputChange = (event, newValue) => {
+    setTerms(newValue);
+  };
+  const handleValueChange = (event, newValue) => {
+    setMedicationArray(newValue);
+  };
+
+  const { data, isLoading, error, isError } = useQuery(
+    ["dosages", medicationArray, selectedMed],
+    () => getMedicationDosage(selectedMed),
+
+    { enabled: selectedMed !== null, refetchOnWindowFocus: true }
+  );
+
+  const { data: data2 } = useQuery(["medications", terms], getMeds, {
+    refetchOnWindowFocus: true,
+  });
+
   return (
     <div className="pb-12">
       <NavBar />
       <Container>
         <Paper>
           <Container className="flex flex-col items-center mt-8 text-lg md:text-xl">
-            <h1 className="text-xl md:text-2xl underline underline-offset-8 py-4">
-              Patient Registration Form
-            </h1>
-            <h2>
-              This is a secure form. Your information will not be shared with
-              anyone.
-            </h2>
-            <p>
-              To read more about how we secure your information please read our
-              security policy
-              <Link href="security">
-                <span className="text-blue-500 hover:cursor-pointer ml-1 hover:underline">
-                  here
-                </span>
-              </Link>
-            </p>
-
+            <div className="text-center border mt-3 pb-3 px-2 rounded-lg border-black border-solid">
+              <h1 className="text-2xl md:text-3xl underline underline-offset-8 py-4">
+                Patient Registration Form
+              </h1>
+              <h2>
+                This is a secure form. Your information will not be shared with
+                anyone.
+              </h2>
+              <p className="text-sm">
+                To read more about how we secure your information please read
+                our security policy
+                <Link href="security">
+                  <span className="text-blue-500 hover:cursor-pointer ml-1 hover:underline">
+                    here
+                  </span>
+                </Link>
+              </p>
+            </div>
             <form className="pt-8 flex flex-col items-center">
-              <header className="flex flex-col items-center pb-4">
-                <h1 className="text-xl md:text-2xl">Mid-South Neurology</h1>
+              <header className="flex flex-col items-center pb-6">
+                <h1 className="text-2xl md:text-2xl">Mid-South Neurology</h1>
                 <div className="text-lg md:text-xl">Dr. William Owens</div>
                 <div className="text-base md:text-lg">Date: {date}</div>
               </header>{" "}
               {display === 1 && (
                 <section className="pb-10">
-                  <h2 className="text-xl md:text-2xl underline underline-offset-8 pb-4">
+                  <h2 className="text-xl md:text-2xl underline underline-offset-8 pb- text-center pb-4">
                     Patient Demographics
                   </h2>
-
                   <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                    <div>
-                      <FormLabel htmlFor="firstName">
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel
+                        // focused={formik.status.firstName}
+                        htmlFor="firstName"
+                      >
                         Patient&apos;s First Name:{" "}
-                      </FormLabel>
+                      </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="firstName"
                         name="firstName"
                         type="text"
@@ -267,11 +349,12 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="lastName">
                         Patient&apos;s Last Name:{" "}
                       </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="lastName"
                         name="lastName"
                         type="text"
@@ -295,35 +378,47 @@ const PatientRegistration = () => {
                         }
                       />{" "}
                     </div>
-                    <div>
-                      <label htmlFor="dob">
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="dob">
                         Patient&apos;s Date of birth:{" "}
-                      </label>
-                      <TextField
+                      </InputLabel>
+                      <DatePicker
+                        className="mt-2 sm:mt-0 ml-0 sm:ml-2"
                         id="dob"
                         name="dob"
-                        type="date"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.dob}
-                        size="small"
-                        variant="standard"
-                        error={
-                          formik.touched.dob && formik.errors.dob ? true : false
-                        }
-                        FormHelperTextProps={{
-                          className: "text-red-500",
+                        onChange={(event) => {
+                          formik.setFieldValue("dob", event);
                         }}
-                        helperText={
-                          formik.touched.dob && formik.errors.dob
-                            ? formik.errors.dob
-                            : null
-                        }
+                        value={formik.values.dob}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="standard"
+                            size="small"
+                            onBlur={formik.handleBlur}
+                            error={
+                              formik.touched.dob && formik.errors.dob
+                                ? true
+                                : false
+                            }
+                            FormHelperTextProps={{
+                              className: "text-red-500",
+                            }}
+                            helperText={
+                              formik.touched.dob && formik.errors.dob
+                                ? formik.errors.dob
+                                : null
+                            }
+                          />
+                        )}
                       />{" "}
                     </div>{" "}
-                    <div>
-                      <label htmlFor="social">Patient&apos;s SS#: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="social">
+                        Patient&apos;s SS#:{" "}
+                      </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="social"
                         name="social"
                         type="text"
@@ -347,9 +442,12 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="pcp">Family Physician (PCP): </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="pcp">
+                        Family Physician (PCP):{" "}
+                      </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="pcp"
                         name="pcp"
                         type="text"
@@ -375,9 +473,12 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="address">Street Address: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="address">
+                        Street Address:{" "}
+                      </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="address"
                         name="address"
                         type="text"
@@ -401,9 +502,10 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="city">City: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="city">City: </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="city"
                         name="city"
                         type="text"
@@ -427,9 +529,10 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="state">State: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="state">State: </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="state"
                         name="state"
                         type="text"
@@ -453,9 +556,10 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="zip">Zip: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="zip">Zip: </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="zip"
                         name="zip"
                         type="text"
@@ -482,9 +586,10 @@ const PatientRegistration = () => {
                     <h2 className="text-xl md:text-2xl underline underline-offset-8 py-4 text-center">
                       Contact information
                     </h2>
-                    <div>
-                      <label htmlFor="phone">Phone: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="phone">Mobile Phone: </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="phone"
                         name="phone"
                         type="tel"
@@ -508,9 +613,10 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div>
-                      <label htmlFor="email">Email: </label>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="email">Email: </InputLabel>
                       <TextField
+                        className="sm:ml-2"
                         id="email"
                         name="email"
                         type="email"
@@ -534,10 +640,10 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div className="text-center md:text-start flex flex-col items-center md:flex-row mb-3 md:mb-0">
-                      <label htmlFor="prefferedContact">
+                    <div className=" flex flex-col items-start sm:flex-row sm:items-center ">
+                      <InputLabel htmlFor="prefferedContact">
                         Preffered Contact Method:{" "}
-                      </label>
+                      </InputLabel>
 
                       <TextField
                         select
@@ -549,19 +655,36 @@ const PatientRegistration = () => {
                         onBlur={formik.handleBlur}
                         value={formik.values.prefferedContact}
                         size="small"
+                        FormHelperTextProps={{
+                          className: "text-red-500",
+                        }}
+                        helperText={
+                          formik.touched.prefferedContact &&
+                          formik.errors.prefferedContact
+                            ? formik.errors.prefferedContact
+                            : null
+                        }
+                        error={
+                          formik.touched.prefferedContact &&
+                          formik.errors.prefferedContact
+                            ? true
+                            : false
+                        }
                       >
                         <MenuItem value="phone">Phone</MenuItem>
                         <MenuItem value="text">Text</MenuItem>
                         <MenuItem value="email">Email</MenuItem>
                       </TextField>
                     </div>
-                    <div className="py-3">
+                    <div className="py-5 text-base text-center">
                       **If Your insurance is under someone else such as a spouse
                       or parent please provide the following: **
                     </div>
                     <section className="grid grid-cols-1 md:grid-cols-3">
-                      <div>
-                        <label htmlFor="insuredName">Insured Name: </label>
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
+                        <InputLabel htmlFor="insuredName">
+                          Insured Name:{" "}
+                        </InputLabel>
                         <TextField
                           id="insuredName"
                           name="insuredName"
@@ -573,23 +696,33 @@ const PatientRegistration = () => {
                           variant="standard"
                         />
                       </div>
-                      <div className="flex flex-col items-start md:flex-row md:items-center">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
                         {" "}
-                        <label htmlFor="insuredDOB">Insured DOB: </label>
-                        <TextField
+                        <InputLabel htmlFor="insuredDOB">
+                          Insured DOB:{" "}
+                        </InputLabel>
+                        <DatePicker
                           className="mt-2 md:ml-2"
                           id="insuredDOB"
                           name="insuredDOB"
-                          type="date"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
                           value={formik.values.insuredDOB}
-                          size="small"
-                          variant="standard"
+                          onChange={(event) => {
+                            formik.setFieldValue("insuredDOB", event);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              variant="standard"
+                              size="small"
+                              onBlur={formik.handleBlur}
+                            />
+                          )}
                         />
                       </div>
-                      <div>
-                        <label htmlFor="insuredSocial">Insured Social: </label>
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
+                        <InputLabel htmlFor="insuredSocial">
+                          Insured Social:{" "}
+                        </InputLabel>
                         <TextField
                           id="insuredSocial"
                           name="insuredSocial"
@@ -648,7 +781,7 @@ const PatientRegistration = () => {
                     <Button
                       variant="contained"
                       className="bg-blue-500"
-                      onClick={formik.handleSubmit}
+                      onClick={form1submitHandler}
                     >
                       Next
                     </Button>
@@ -665,12 +798,403 @@ const PatientRegistration = () => {
               
                   section 2 */}
               {display === 2 && (
-                <section className="flex flex-col items-center">
-                  <div className="flex flex-col items-center">
-                    <h2 className="text-2xl font-bold text-center">
-                      Patient History
-                    </h2>
+                <section>
+                  <h2 className="text-2xl font-bold text-center">
+                    Patient History
+                  </h2>
+                  <article className="grid grid-cols-1 sm:grid-cols-2 py-5">
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel>Reason for visit</InputLabel>
+                      <TextField
+                        id="reasonForVisit"
+                        name="reasonForVisit"
+                        type="text"
+                        onChange={formikHistory.handleChange}
+                        onBlur={formikHistory.handleBlur}
+                        value={formikHistory.values.reasonForVisit}
+                        size="small"
+                        variant="standard"
+                        FormHelperTextProps={{
+                          className: "text-red-500",
+                        }}
+                        helperText={
+                          formikHistory.touched.reasonForVisit &&
+                          formikHistory.errors.reasonForVisit
+                            ? formikHistory.errors.reasonForVisit
+                            : null
+                        }
+                        error={
+                          formikHistory.touched.reasonForVisit &&
+                          formikHistory.errors.reasonForVisit
+                            ? true
+                            : false
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="refferringMD">
+                        Refferring Physician
+                      </InputLabel>
+                      <TextField
+                        id="refferringMD"
+                        name="refferringMD"
+                        type="text"
+                        onChange={formikHistory.handleChange}
+                        onBlur={formikHistory.handleBlur}
+                        value={formikHistory.values.refferringMD}
+                        size="small"
+                        variant="standard"
+                        FormHelperTextProps={{
+                          className: "text-red-500",
+                        }}
+                        helperText={
+                          formikHistory.touched.refferringMD &&
+                          formikHistory.errors.refferringMD
+                            ? formikHistory.errors.refferringMD
+                            : null
+                        }
+                        error={
+                          formikHistory.touched.refferringMD &&
+                          formikHistory.errors.refferringMD
+                            ? true
+                            : false
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="pharmacy">
+                        Current Pharmacy
+                      </InputLabel>
+                      <TextField
+                        id="pharmacy"
+                        name="pharmacy"
+                        type="text"
+                        onChange={formikHistory.handleChange}
+                        onBlur={formikHistory.handleBlur}
+                        value={formikHistory.values.pharmacy}
+                        size="small"
+                        variant="standard"
+                        FormHelperTextProps={{
+                          className: "text-red-500",
+                        }}
+                        helperText={
+                          formikHistory.touched.pharmacy &&
+                          formikHistory.errors.pharmacy
+                            ? formikHistory.errors.pharmacy
+                            : null
+                        }
+                        error={
+                          formikHistory.touched.pharmacy &&
+                          formikHistory.errors.pharmacy
+                            ? true
+                            : false
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                        <InputLabel htmlFor="heightFt">
+                          Height (feet)
+                        </InputLabel>
+                        <TextField
+                          className="w-12 ml-2"
+                          id="heightFt"
+                          name="heightFt"
+                          type="number"
+                          onChange={formikHistory.handleChange}
+                          onBlur={formikHistory.handleBlur}
+                          value={formikHistory.values.heightFt}
+                          size="small"
+                          variant="standard"
+                          FormHelperTextProps={{
+                            className: "text-red-500",
+                          }}
+                          helperText={
+                            formikHistory.touched.heightFt &&
+                            formikHistory.errors.heightFt
+                              ? formikHistory.errors.heightFt
+                              : null
+                          }
+                          error={
+                            formikHistory.touched.heightFt &&
+                            formikHistory.errors.heightFt
+                              ? true
+                              : false
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                        <InputLabel htmlFor="heightIn">
+                          Height (inches)
+                        </InputLabel>
+                        <TextField
+                          className="w-12 ml-2"
+                          id="heightIn"
+                          name="heightIn"
+                          type="number"
+                          onChange={formikHistory.handleChange}
+                          onBlur={formikHistory.handleBlur}
+                          value={formikHistory.values.heightIn}
+                          size="small"
+                          variant="standard"
+                          FormHelperTextProps={{
+                            className: "text-red-500",
+                          }}
+                          helperText={
+                            formikHistory.touched.heightIn &&
+                            formikHistory.errors.heightIn
+                              ? formikHistory.errors.heightIn
+                              : null
+                          }
+                          error={
+                            formikHistory.touched.heightIn &&
+                            formikHistory.errors.heightIn
+                              ? true
+                              : false
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                      <InputLabel htmlFor="weight">Weight (lbs)</InputLabel>
+                      <TextField
+                        id="weight"
+                        name="weight"
+                        type="number"
+                        onChange={formikHistory.handleChange}
+                        onBlur={formikHistory.handleBlur}
+                        value={formikHistory.values.weight}
+                        size="small"
+                        variant="standard"
+                        FormHelperTextProps={{
+                          className: "text-red-500",
+                        }}
+                        helperText={
+                          formikHistory.touched.weight &&
+                          formikHistory.errors.weight
+                            ? formikHistory.errors.weight
+                            : null
+                        }
+                        error={
+                          formikHistory.touched.weight &&
+                          formikHistory.errors.weight
+                            ? true
+                            : false
+                        }
+                      />
+                    </div>{" "}
+                  </article>
+                  <div className="flex flex-col items-center py-3 ">
+                    <div className="flex flex-row items-center">
+                      <InputLabel htmlFor="allergies">Allergies</InputLabel>
+                      <IconButton
+                        onClick={() => {
+                          setAllergyNum([...allergyNum, ""]);
+                        }}
+                        className="text-blue-500 ml-1"
+                      >
+                        <MdAddCircleOutline size={25} />
+                      </IconButton>
+                    </div>
+                    <div className="sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {allergyNum.length == 0
+                        ? null
+                        : allergyNum.map((allergy, index) => (
+                            <div
+                              key={index}
+                              className="flex sm:flex-col items-center flex-row "
+                            >
+                              <div className="border-black flex flex-col items-center border border-solid my-3 p-5 rounded-xl">
+                                <TextField
+                                  className="w-36 ml-2 mb-3"
+                                  id={"allergies" + index}
+                                  name={"allergies" + index}
+                                  value={allergyArray[index]}
+                                  onChange={(e) => {
+                                    let temp = [...allergyArray];
+                                    temp[index] = e.target.value;
+                                    setAllergyArray(temp);
+                                  }}
+                                  type="text"
+                                  size="small"
+                                  variant="standard"
+                                />
+                                {console.log(allergyArray)}
+                                {console.log(allergyReactionArray)}
+                                <TextField
+                                  className="w-36 ml-2 mt-3"
+                                  id={"allergyReaction" + index}
+                                  name={"allergyReaction" + index}
+                                  type="text"
+                                  size="small"
+                                  value={allergyReactionArray[index]}
+                                  onChange={(e) => {
+                                    let temp = [...allergyReactionArray];
+                                    temp[index] = e.target.value;
+                                    setAllergyReactionArray(temp);
+                                  }}
+                                  variant="standard"
+                                  select
+                                >
+                                  <MenuItem value="Itching">Itching</MenuItem>
+                                  <MenuItem value="Hives">Hives</MenuItem>
+                                  <MenuItem value="Rash">Rash</MenuItem>
+                                  <MenuItem value="Swelling">Swelling</MenuItem>
+                                  <MenuItem value="Wheezing">Wheezing</MenuItem>
+                                  <MenuItem value="Anaphylaxis">
+                                    Anaphylaxis
+                                  </MenuItem>
+                                  <MenuItem value="Sneezing">Sneezing</MenuItem>
+                                </TextField>
+                              </div>
+                              <IconButton
+                                className="ml-2"
+                                onClick={() => {
+                                  let temp = [...allergyNum];
+                                  temp.splice(index, 1);
+                                  setAllergyNum(temp);
+                                  setAllergyArray(
+                                    allergyArray.filter((_, i) => i !== index)
+                                  );
+                                  setAllergyReactionArray(
+                                    allergyReactionArray.filter(
+                                      (_, i) => i !== index
+                                    )
+                                  );
+                                }}
+                              >
+                                {" "}
+                                <MdDelete className="text-red-500" size={25} />
+                              </IconButton>
+                            </div>
+                          ))}
+                    </div>
                   </div>
+                  <div>
+                    <InputLabel
+                      className="text-center text-xl pb-3"
+                      htmlFor="allergies"
+                    >
+                      Current Medications
+                    </InputLabel>
+                    <div className="flex justify-center">
+                      <Autocomplete
+                        limitTags={1}
+                        multiple={true}
+                        name="patientMeds"
+                        id="patientMeds"
+                        value={medicationArray}
+                        inputValue={terms}
+                        onInputChange={handleInputChange}
+                        onChange={handleValueChange}
+                        options={medlist}
+                        className="w-72 mb-6"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Start typing to search"
+                          />
+                        )}
+                      />{" "}
+                    </div>
+                    <Table className="shadow-lg border border-black border-solid">
+                      <TableHead className="">
+                        <TableRow>
+                          <TableCell className="text-base sm:text-lg">
+                            Medication
+                          </TableCell>
+                          <TableCell className="text-base sm:text-lg">
+                            Dosage
+                          </TableCell>
+                          {/* <TableCell className="text-base sm:text-lg">
+                            Delete
+                          </TableCell> */}
+                        </TableRow>
+                      </TableHead>
+                      {console.log(selectedMed)}
+                      <TableBody>
+                        {medicationArray.map((medication, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="w-1/2">
+                              {medication}
+                            </TableCell>
+                            <TableCell className="w-1/2">
+                              <Button
+                                className="bg-blue-500 text-white text-sm"
+                                variant="contained"
+                                size="small"
+                                onClick={() => {
+                                  setSelectedMed(medication);
+                                }}
+                              >
+                                dosage
+                              </Button>
+                              {/* <TextField
+                                className="w-1/2 ml-2"
+                                id={"dosage" + index}
+                                name={"dosage" + index}
+                                size="small"
+                                onClick={() => setSelectedMed(medication)}
+                                disabled={selectedMed !== medication}
+                                onChange={(e) => {
+                                  let temp = [...medicationDosageArray];
+                                  temp[index] = e.target.value;
+                                  setMedicationDosageArray(temp);
+                                }}
+                                value={medicationDosageArray[index]}
+                              > */}
+                              {/* {isLoading || firstLoading ? (
+                                  <MenuItem className="flex justify-between">
+                                    Loading <CircularProgress size={20} />
+                                  </MenuItem>
+                                ) : data.length == 0 ? (
+                                  <MenuItem>No options available</MenuItem>
+                                ) : (
+                                  data.map((dosage, index) => (
+                                    <MenuItem
+                                      selected={
+                                        dosage == medicationDosageArray[index]
+                                      }
+                                      key={index}
+                                      onSelect={() => {
+                                        setSelectedMed("");
+                                        setFirstLoading(true);
+                                      }}
+                                      label={dosage}
+                                    >
+                                      {dosage}
+                                    </MenuItem>
+                                  ))
+                                )} */}
+                              {/* </TextField> */}
+                              <IconButton
+                                className="ml-2"
+                                onClick={() => {
+                                  if (index == 0) {
+                                    let temp = [...medicationArray];
+                                    temp.shift();
+                                    setMedicationArray(temp);
+                                  } else {
+                                    let temp2 = [...medicationArray];
+                                    temp2.splice(index, 1);
+                                    setMedicationArray(temp2);
+                                  }
+                                }}
+                              >
+                                {" "}
+                                <MdDelete className="text-red-500" size={25} />
+                              </IconButton>
+                            </TableCell>
+                            {/* <TableCell>
+                              
+                            </TableCell> */}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
                   <div className="flex justify-between my-6">
                     <Button
                       variant="contained"
@@ -1174,6 +1698,74 @@ const PatientRegistration = () => {
             </form>
           </Container>
         </Paper>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          autoHideDuration={2000}
+          open={isValid === false}
+          onClose={() => setIsValid(true)}
+        >
+          <Alert severity="error">Please fill out the required fields</Alert>
+        </Snackbar>
+        {selectedMed && (
+          <div>
+            {" "}
+            {isLoading ? (
+              <Dialog open={selectedMed !== null}>
+                <DialogTitle className="text-center">
+                  Select a dosage
+                </DialogTitle>
+                <DialogContent>
+                  <CircularProgress />
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Dialog
+                open={selectedMed !== null}
+                maxWidth="md"
+                fullWidth={true}
+              >
+                <DialogTitle className="text-center">
+                  Select a dosage for {selectedMed}
+                </DialogTitle>
+                <DialogContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {data.map((med) => {
+                      return (
+                        <Card key={med} className="w-24 p-0">
+                          <CardActionArea>
+                            <CardContent
+                              className="bg-blue-500 text-white text-center
+                            "
+                              onClick={() => {
+                                setMedicationDosageArray([
+                                  ...medicationDosageArray,
+                                  med,
+                                ]);
+                              }}
+                            >
+                              {med}
+                            </CardContent>
+                          </CardActionArea>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </DialogContent>
+                <DialogActions className="flex justify-center">
+                  <Button
+                    onClick={() => setSelectedMed(null)}
+                    className="bg-blue-500"
+                    size="small"
+                    variant="contained"
+                  >
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )}
+          </div>
+        )}
+
         <Dialog open={sign1}>
           <DialogTitle className="text-center">
             Electronically sign this document
