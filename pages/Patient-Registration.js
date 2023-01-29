@@ -889,8 +889,8 @@ const PatientRegistration = () => {
                         }
                       />
                     </div>
-                    <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
-                      <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
+                    <div className="flex flex-row items-center justify-between sm:flex-col sm:items-center md:flex-row my-2">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center my-2 ">
                         <InputLabel htmlFor="heightFt">
                           Height (feet)
                         </InputLabel>
