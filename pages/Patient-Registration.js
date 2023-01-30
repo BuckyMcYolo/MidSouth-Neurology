@@ -27,6 +27,8 @@ import {
   RadioGroup,
   Radio,
   FormControl,
+  Select,
+  Checkbox,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -35,9 +37,11 @@ import { SiDocusign } from "react-icons/si";
 import { MdUploadFile, MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useQuery } from "react-query";
-import { data } from "autoprefixer";
+import { useRouter } from "next/router";
 
 const PatientRegistration = () => {
+  const router = useRouter();
+
   const [display, setDisplay] = React.useState(1);
   const [isValid, setIsValid] = React.useState(true);
   //first page
@@ -47,6 +51,7 @@ const PatientRegistration = () => {
   const [date1Signed, setDate1Signed] = React.useState("");
   const [sign1Error, setSign1Error] = React.useState(false);
   //second page
+  const [isValid2, setIsValid2] = React.useState(true);
   const [allergyArray, setAllergyArray] = React.useState([]);
   const [selectedAllergy, setSelectedAllergy] = React.useState("");
   const [selectedAllergyReaction, setSelectedAllergyReaction] =
@@ -89,13 +94,78 @@ const PatientRegistration = () => {
     return data;
   };
 
-  const getMedicationDosage = async (medication) => {
+  const sendEmail = async () => {
     const res = await fetch(
-      `https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?ef=STRENGTHS_AND_FORMS&maxList&terms=${medication}}`
+      "https://xmks-s250-ypw0.n7.xano.io/api:Zu4HHm2U/Patient_registration_form",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject: `New Patient Registration for ${formik.values.firstName} ${formik.values.lastName}`,
+          template: "registration_form",
+          data: {
+            name: formik.values.firstName + " " + formik.values.lastName,
+            DOB: fixedDob,
+            date: new Date().toLocaleString(),
+            street_address: formik.values.address,
+            city: formik.values.city,
+            state: formik.values.state,
+            zip: formik.values.zip,
+            ss: formik.values.social,
+            pcp: formik.values.pcp,
+            email: formik.values.email,
+            phone: formik.values.phone,
+            communication: formik.values.prefferedContact,
+            insuredName: formik.values.insuredName,
+            InsuredSS: formik.values.insuredSocial,
+            insuredDOB: fixedInsuredDob,
+            visitReason: formikHistory.values.reasonForVisit,
+            refferringPhys: formikHistory.values.refferringMD,
+            currentPharmacy: formikHistory.values.pharmacy,
+            height:
+              formikHistory.values.heightFt +
+              " ft " +
+              formikHistory.values.heightIn +
+              "in",
+            weight: formikHistory.values.weight + " " + "lbs",
+            allergies: allergyArray,
+            medications: medicationFullArray,
+            medicalHx: medicalHistoryArray,
+            surgicalHx: surgicalHistoryArray,
+            tabaccoBool: formikHistory.values.useTobaccoBool,
+            cigs: formikHistory.values.useCiggarrettes,
+            smokeless: formikHistory.values.useChewingTobacco,
+            vapes: formikHistory.values.useVapes,
+            alcoholBool: formikHistory.values.useAlcoholBool,
+            beer: formikHistory.values.useBeer,
+            wine: formikHistory.values.useWine,
+            liquor: formikHistory.values.useLiquor,
+            illicitDrugs: formikHistory.values.useIllicitDrugsPresent,
+            pastIllicitDrugs: formikHistory.values.useIllicitDrugsPast,
+            drugsUsed: formikHistory.values.useIllicitDrugs,
+            imagingBool: formikHistory.values.pastImaging,
+            testingLocation: formikHistory.values.pastImagingLocation,
+            name1: formikLastPage.values.name1,
+            phone1: formikLastPage.values.phone1,
+            relationship1: formikLastPage.values.relationship1,
+            name2: formikLastPage.values.name2,
+            phone2: formikLastPage.values.phone2,
+            relationship2: formikLastPage.values.relationship2,
+            name3: formikLastPage.values.name3,
+            phone3: formikLastPage.values.phone3,
+            relationship3: formikLastPage.values.relationship3,
+          },
+        }),
+      }
     );
     const data = await res.json();
-
-    return data[2].STRENGTHS_AND_FORMS[0];
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong!");
+    } else {
+      router.replace("/success");
+    }
   };
 
   const formik = useFormik({
@@ -114,33 +184,32 @@ const PatientRegistration = () => {
       dob: "",
       insuredName: "",
       insuredSocial: "",
-      insuredDOB: null,
+      insuredDOB: "",
     },
-    // validationSchema: yup.object({
-    //   firstName: yup.string().required("Required"),
-    //   lastName: yup.string().required("Required"),
-    //   address: yup.string().required("Required"),
-    //   city: yup.string().required("Required"),
-    //   state: yup.string().required("Required"),
-    //   zip: yup.string().required("Required"),
-    //   social: yup.string().required("Required"),
-    //   pcp: yup.string().required("Required"),
-    //   phone: yup.string().required("Required"),
-    //   email: yup.string().required("Required").email("Invalid email address"),
-    //   prefferedContact: yup.string().required("Required"),
-    //   dob: yup.string().required("Required").nullable(),
-    // }),
+    validationSchema: yup.object({
+      firstName: yup.string().required("Required"),
+      lastName: yup.string().required("Required"),
+      address: yup.string().required("Required"),
+      city: yup.string().required("Required"),
+      state: yup.string().required("Required"),
+      zip: yup.string().required("Required"),
+      social: yup.string().required("Required"),
+      pcp: yup.string().required("Required"),
+      phone: yup.string().required("Required"),
+      email: yup.string().required("Required").email("Invalid email address"),
+      prefferedContact: yup.string().required("Required"),
+      dob: yup.string().required("Required").nullable(),
+    }),
     onSubmit: () => {
-      // if (!is1Signed) {
-      //   setSign1Error(true);
-      // } else {
-      nextPage();
-      // }
+      if (!is1Signed) {
+        setSign1Error(true);
+      } else {
+        nextPage();
+      }
     },
   });
 
-  const form1submitHandler = (e) => {
-    e.preventDefault();
+  const form1submitHandler = () => {
     if (!formik.isValid) {
       setIsValid(false);
     }
@@ -159,19 +228,43 @@ const PatientRegistration = () => {
       medicalHistory: [],
       surgicalHistory: [],
       familyHistory: [],
-      useTobaccoBool: false,
-      useCiggarrettes: false,
-      useCigars: false,
-      useChewingTobacco: false,
-      useVapes: false,
-      useOther: false,
-      useAlcoholBool: false,
-      useBeer: false,
-      useWine: false,
-      useLiquor: false,
-      useIllicitDrugsPresent: false,
-      useIllicitDrugsPast: false,
-      pastImaging: "",
+      fatherAge: "",
+      fatherAlive: "",
+      fatherMedicalHistory: [],
+      motherAge: "",
+      motherAlive: "",
+      motherMedicalHistory: "",
+      brotherAge: "",
+      brotherAlive: "",
+      brotherMedicalHistory: "",
+      sisterAge: "",
+      sisterAlive: "",
+      sisterMedicalHistory: "",
+      maternalGrandfatherAge: "",
+      maternalGrandfatherAlive: "",
+      maternalGrandfatherMedicalHistory: "",
+      maternalGrandmotherAge: "",
+      maternalGrandmotherAlive: "",
+      maternalGrandmotherMedicalHistory: "",
+      paternalGrandfatherAge: "",
+      paternalGrandfatherAlive: "",
+      paternalGrandfatherMedicalHistory: "",
+      paternalGrandmotherAge: "",
+      paternalGrandmotherAlive: "",
+      paternalGrandmotherMedicalHistory: "",
+      useTobaccoBool: "No",
+      useCiggarrettes: "",
+      useChewingTobacco: "",
+      useVapes: "",
+      useOther: "",
+      useAlcoholBool: "No",
+      useBeer: "",
+      useWine: "",
+      useLiquor: "",
+      useIllicitDrugsPresent: "No",
+      useIllicitDrugsPast: "No",
+      useIllicitDrugs: "",
+      pastImaging: "No",
       pastImagingLocation: "",
     },
     validationSchema: yup.object({
@@ -181,11 +274,30 @@ const PatientRegistration = () => {
       heightFt: yup.number().required("Required"),
       heightIn: yup.number().required("Required"),
       weight: yup.string().required("Required"),
-      pastImaging: yup.string().required("Required"),
-      pastImagingLocation: yup.string().required("Required"),
     }),
     onSubmit: () => {
-      alert(JSON.stringify(formikHistory.values, null, 2));
+      nextPage();
+    },
+  });
+
+  const form2submitHandler = () => {
+    if (!formikHistory.isValid) {
+      setIsValid2(false);
+    }
+    formikHistory.handleSubmit();
+  };
+
+  const formikLastPage = useFormik({
+    initialValues: {
+      name1: "",
+      phone1: "",
+      relationship1: "",
+      name2: "",
+      phone2: "",
+      relationship2: "",
+      name3: "",
+      phone3: "",
+      relationship3: "",
     },
   });
 
@@ -231,10 +343,12 @@ const PatientRegistration = () => {
 
   const nextPage = () => {
     setDisplay((prevDisplay) => prevDisplay + 1);
+    window.scrollTo(0, 0);
   };
 
   const prevPage = () => {
     setDisplay((prevDisplay) => prevDisplay - 1);
+    window.scrollTo(0, 0);
   };
 
   const nextPage3 = () => {
@@ -279,31 +393,46 @@ const PatientRegistration = () => {
     refetchOnWindowFocus: true,
   });
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    sendEmail();
+  };
+
+  const fixedDob = new Date(formik.values.dob).toLocaleDateString("en-US");
+  const fixedInsuredDob = new Date(formik.values.insuredDOB).toLocaleDateString(
+    "en-US"
+  );
+  console.log(new Date().toLocaleString());
   return (
     <div className="pb-12">
       <NavBar />
       <Container>
         <Paper>
           <Container className="flex flex-col items-center mt-8 text-lg md:text-xl">
-            <div className="text-center border mt-3 pb-3 px-2 rounded-lg border-black border-solid">
-              <h1 className="text-2xl md:text-3xl underline underline-offset-8 py-4">
-                Patient Registration Form
-              </h1>
-              <h2>
-                This is a secure form. Your information will not be shared with
-                anyone.
-              </h2>
-              <p className="text-sm">
-                To read more about how we secure your information please read
-                our security policy
-                <Link href="security">
-                  <span className="text-blue-500 hover:cursor-pointer ml-1 hover:underline">
-                    here
-                  </span>
-                </Link>
-              </p>
-            </div>
-            <form className="pt-8 flex flex-col items-center">
+            {display == 1 && (
+              <div className="text-center border mt-3 pb-3 px-2 rounded-lg border-black border-solid">
+                <h1 className="text-2xl md:text-3xl underline underline-offset-8 py-4">
+                  Patient Registration Form
+                </h1>
+                <h2>
+                  This is a secure form. Your information will not be shared
+                  with anyone.
+                </h2>
+                <p className="text-sm">
+                  To read more about how we secure your information please read
+                  our security policy
+                  <Link href="security">
+                    <span className="text-blue-500 hover:cursor-pointer ml-1 hover:underline">
+                      here
+                    </span>
+                  </Link>
+                </p>
+              </div>
+            )}
+            <form
+              className="pt-8 flex flex-col items-center"
+              onSubmit={handleSubmit}
+            >
               <header className="flex flex-col items-center pb-6">
                 <h1 className="text-2xl md:text-2xl">Mid-South Neurology</h1>
                 <div className="text-lg md:text-xl">Dr. William Owens</div>
@@ -645,7 +774,7 @@ const PatientRegistration = () => {
 
                       <TextField
                         select
-                        className="ml-2 mt-3 md:mt-0 w-20"
+                        className=" ml-0 sm:ml-2 w-24 "
                         variant="standard"
                         id="prefferedContact"
                         name="prefferedContact"
@@ -679,11 +808,12 @@ const PatientRegistration = () => {
                       or parent please provide the following: **
                     </div>
                     <section className="grid grid-cols-1 md:grid-cols-3">
-                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center mt-4">
                         <InputLabel htmlFor="insuredName">
                           Insured Name:{" "}
                         </InputLabel>
                         <TextField
+                          className=" ml-0 sm:ml-2 w-40 "
                           id="insuredName"
                           name="insuredName"
                           type="text"
@@ -694,13 +824,12 @@ const PatientRegistration = () => {
                           variant="standard"
                         />
                       </div>
-                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center mt-4">
                         {" "}
                         <InputLabel htmlFor="insuredDOB">
                           Insured DOB:{" "}
                         </InputLabel>
                         <DatePicker
-                          className="mt-2 md:ml-2"
                           id="insuredDOB"
                           name="insuredDOB"
                           value={formik.values.insuredDOB}
@@ -713,15 +842,17 @@ const PatientRegistration = () => {
                               variant="standard"
                               size="small"
                               onBlur={formik.handleBlur}
+                              className=" ml-0 sm:ml-2 w-40 "
                             />
                           )}
                         />
                       </div>
-                      <div className="flex flex-col items-start sm:flex-row sm:items-center">
+                      <div className="flex flex-col items-start sm:flex-row sm:items-center mt-4">
                         <InputLabel htmlFor="insuredSocial">
                           Insured Social:{" "}
                         </InputLabel>
                         <TextField
+                          className=" ml-0 sm:ml-2 w-40 "
                           id="insuredSocial"
                           name="insuredSocial"
                           type="number"
@@ -804,6 +935,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel>Reason for visit</InputLabel>
                       <TextField
+                        className="ml-0 sm:ml-2"
                         id="reasonForVisit"
                         name="reasonForVisit"
                         type="text"
@@ -834,6 +966,7 @@ const PatientRegistration = () => {
                         Refferring Physician
                       </InputLabel>
                       <TextField
+                        className="ml-0 sm:ml-2"
                         id="refferringMD"
                         name="refferringMD"
                         type="text"
@@ -864,6 +997,7 @@ const PatientRegistration = () => {
                         Current Pharmacy
                       </InputLabel>
                       <TextField
+                        className="ml-0 sm:ml-2"
                         id="pharmacy"
                         name="pharmacy"
                         type="text"
@@ -895,7 +1029,7 @@ const PatientRegistration = () => {
                           Height (feet)
                         </InputLabel>
                         <TextField
-                          className="w-12 ml-2"
+                          className="w-12 ml-0 sm:ml-2"
                           id="heightFt"
                           name="heightFt"
                           type="number"
@@ -926,7 +1060,7 @@ const PatientRegistration = () => {
                           Height (inches)
                         </InputLabel>
                         <TextField
-                          className="w-12 ml-2"
+                          className="w-12 sm:ml-2 m-0"
                           id="heightIn"
                           name="heightIn"
                           type="number"
@@ -956,6 +1090,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="weight">Weight (lbs)</InputLabel>
                       <TextField
+                        className="ml-0 sm:ml-2"
                         id="weight"
                         name="weight"
                         type="number"
@@ -982,7 +1117,6 @@ const PatientRegistration = () => {
                       />
                     </div>{" "}
                   </article>
-
                   <div className="pb-10">
                     <InputLabel
                       className="text-center text-xl pb-3 underline underline-offset-8"
@@ -1020,6 +1154,7 @@ const PatientRegistration = () => {
                         <MenuItem value="Swelling">Swelling</MenuItem>
                         <MenuItem value="Wheezing">Wheezing</MenuItem>
                         <MenuItem value="Anaphylaxis">Anaphylaxis</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
                       </TextField>
                       <Button
                         disabled={
@@ -1038,6 +1173,8 @@ const PatientRegistration = () => {
                               reaction: selectedAllergyReaction,
                             },
                           ]);
+                          setSelectedAllergy("");
+                          setSelectedAllergyReaction("");
                         }}
                       >
                         Add
@@ -1143,9 +1280,7 @@ const PatientRegistration = () => {
                             )
                           )
                         ) : (
-                          <MenuItem value="No Dosage Available">
-                            No Dosage Available
-                          </MenuItem>
+                          <MenuItem value="No Dosage Available"></MenuItem>
                         )}
                       </TextField>
                       <TextField
@@ -1269,7 +1404,6 @@ const PatientRegistration = () => {
                       </Table>
                     </TableContainer>
                   </div>
-
                   <div className="pb-12">
                     <InputLabel className="text-center text-xl pb-3 underline underline-offset-8">
                       Medical History
@@ -1352,7 +1486,6 @@ const PatientRegistration = () => {
                       </Table>
                     </TableContainer>
                   </div>
-
                   <div className="pb-12">
                     <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
                       Surgical History
@@ -1407,7 +1540,9 @@ const PatientRegistration = () => {
                           let temp = [...surgicalHistoryArray];
                           temp.push({
                             name: selectedSurgicalHistory,
-                            date: selectedSurgicalHistoryDate,
+                            date: new Date(
+                              selectedSurgicalHistoryDate
+                            ).toLocaleDateString("en-US"),
                           });
                           setSurgicalHistoryArray(temp);
                           setSelectedSurgicalHistory("");
@@ -1471,34 +1606,293 @@ const PatientRegistration = () => {
                     <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
                       Family History
                     </InputLabel>
+                    <TableContainer
+                      component={Paper}
+                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      style={{ maxHeight: 600 }}
+                    >
+                      <Table aria-label="Family history table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Family Member
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Age
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Alive / Deceased
+                            </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                              Medical History
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody></TableBody>
+                      </Table>
+                    </TableContainer>
                   </div>
-                  <div className="pb-12">
-                    {" "}
+                  <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
+                    Enviromental History
+                  </InputLabel>{" "}
+                  <div className="pb-12 grid grid-cols-1 gap-4 sm:grid-cols-2 ">
+                    <div>
+                      <FormControl>
+                        <FormLabel htmlFor="useTobaccoBool">
+                          Do you use tobacco products?
+                        </FormLabel>
+                        <RadioGroup
+                          id="useTobaccoBool"
+                          aria-label="tobacco"
+                          name="useTobaccoBool"
+                          value={formikHistory.values.useTobaccoBool}
+                          onChange={formikHistory.handleChange}
+                        >
+                          <FormControlLabel
+                            value={"Yes"}
+                            control={<Radio />}
+                            label="Yes"
+                          />
+                          <FormControlLabel
+                            value={"No"}
+                            control={<Radio />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                      {formikHistory.values.useTobaccoBool == "Yes" && (
+                        <div>
+                          <InputLabel className="text-center text-base pb-2 underline underline-offset-8">
+                            How many packs/cans per week?
+                          </InputLabel>
+                          <div className="flex flex-col items-start">
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useCiggarrettes">
+                                Cigarettes/Cigars
+                              </FormLabel>
+                              <TextField
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useCiggarrettes"
+                                name="useCiggarrettes"
+                                value={formikHistory.values.useCiggarrettes}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useChewingTobacco">
+                                Smokeless
+                              </FormLabel>
+                              <TextField
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useChewingTobacco"
+                                name="useChewingTobacco"
+                                value={formikHistory.values.useChewingTobacco}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useVapes">
+                                E-cig/Vape
+                              </FormLabel>
+                              <TextField
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useVapes"
+                                name="useVapes"
+                                value={formikHistory.values.useVapes}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <FormControl>
+                        <FormLabel htmlFor="useAlcoholBool">
+                          Do you drink alcohol?
+                        </FormLabel>
+                        <RadioGroup
+                          id="useAlcoholBool"
+                          aria-label="alcohol"
+                          name="useAlcoholBool"
+                          value={formikHistory.values.useAlcoholBool}
+                          onChange={formikHistory.handleChange}
+                        >
+                          <FormControlLabel
+                            value={"Yes"}
+                            control={<Radio />}
+                            label="Yes"
+                          />
+                          <FormControlLabel
+                            value={"No"}
+                            control={<Radio />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                      {formikHistory.values.useAlcoholBool == "Yes" && (
+                        <div>
+                          <InputLabel className="text-center text-base pb-2 underline underline-offset-8">
+                            How many drinks per week?
+                          </InputLabel>
+                          <div className="flex flex-col items-start">
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useBeer">Beer</FormLabel>
+                              <TextField
+                                type={"number"}
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useBeer"
+                                name="useBeer"
+                                value={formikHistory.values.useBeer}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useWine">Wine</FormLabel>
+                              <TextField
+                                type={"number"}
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useWine"
+                                name="useWine"
+                                value={formikHistory.values.useWine}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+                            <div className="flex items-center">
+                              <FormLabel htmlFor="useLiquor">Liquor</FormLabel>
+                              <TextField
+                                type={"number"}
+                                placeholder="Amount"
+                                className="ml-2 w-24 mt-2"
+                                size="small"
+                                id="useLiquor"
+                                name="useLiquor"
+                                value={formikHistory.values.useLiquor}
+                                onChange={formikHistory.handleChange}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                     <FormControl>
-                      <FormLabel htmlFor="useTobaccoBool">
-                        Do you use tobacco products?
+                      <FormLabel htmlFor="useIllicitDrugsPast">
+                        Do you presently use illicit drugs?
                       </FormLabel>
                       <RadioGroup
-                        id="useTobaccoBool"
-                        aria-label="tobacco"
-                        name="useTobaccoBool"
-                        value={formikHistory.values.useTobaccoBool}
+                        id="useIllicitDrugsPast"
+                        aria-label="Illicit Drugs Past"
+                        name="useIllicitDrugsPast"
+                        value={formikHistory.values.useIllicitDrugsPast}
                         onChange={formikHistory.handleChange}
                       >
                         <FormControlLabel
-                          value={true}
+                          value={"Yes"}
                           control={<Radio />}
                           label="Yes"
                         />
                         <FormControlLabel
-                          value={false}
+                          value={"No"}
                           control={<Radio />}
                           label="No"
                         />
                       </RadioGroup>
                     </FormControl>
+                    <FormControl>
+                      <FormLabel htmlFor="useIllicitDrugsPresent">
+                        Have you ever used illicit drugs in the past?
+                      </FormLabel>
+                      <RadioGroup
+                        id="useIllicitDrugsPresent"
+                        aria-label="Illicit Drugs Present"
+                        name="useIllicitDrugsPresent"
+                        value={formikHistory.values.useIllicitDrugsPresent}
+                        onChange={formikHistory.handleChange}
+                      >
+                        <FormControlLabel
+                          value={"Yes"}
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value={"No"}
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    {formikHistory.values.useIllicitDrugsPresent == "Yes" ||
+                    formikHistory.values.useIllicitDrugsPast == "Yes" ? (
+                      <div>
+                        <div className="text-center text-base pb-2 ">
+                          Please indicate which drugs you are using/have used
+                        </div>
+                        <TextField
+                          placeholder="Ex.
+                          Cocaine, Heroin, Meth, etc"
+                          className="w-full mt-2"
+                          size="small"
+                          id="useIllicitDrugs"
+                          name="useIllicitDrugs"
+                          value={formikHistory.values.useIllicitDrugs}
+                          onChange={formikHistory.handleChange}
+                        />
+                      </div>
+                    ) : null}
+                    <div>
+                      <FormControl>
+                        <FormLabel htmlFor="pastImaging">
+                          Have you ever had any imaging done?
+                        </FormLabel>
+                        <RadioGroup
+                          id="pastImaging"
+                          aria-label="Past Imaging"
+                          name="pastImaging"
+                          value={formikHistory.values.pastImaging}
+                          onChange={formikHistory.handleChange}
+                        >
+                          <FormControlLabel
+                            value={"Yes"}
+                            control={<Radio />}
+                            label="Yes"
+                          />
+                          <FormControlLabel
+                            value={"No"}
+                            control={<Radio />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                      {formikHistory.values.pastImaging == "Yes" ? (
+                        <div>
+                          <div className="text-center text-base pb-2 ">
+                            Where was the imaging done?
+                          </div>
+                          <TextField
+                            placeholder="Ex.
+                           Memphis Hospital, Baptist Imaging Center, etc"
+                            className="w-full mt-2"
+                            size="small"
+                            id="pastImagingLocation"
+                            name="pastImagingLocation"
+                            value={formikHistory.values.pastImagingLocation}
+                            onChange={formikHistory.handleChange}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-
                   <div className="flex justify-between my-6">
                     <Button
                       variant="contained"
@@ -1510,7 +1904,7 @@ const PatientRegistration = () => {
                     <Button
                       variant="contained"
                       className="bg-blue-500"
-                      onClick={nextPage}
+                      onClick={form2submitHandler}
                     >
                       Next
                     </Button>
@@ -1686,7 +2080,7 @@ const PatientRegistration = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-row justify-between mt-10">
+                  <div className="flex flex-row justify-between my-6">
                     <Button
                       variant="contained"
                       className="bg-[#de5e73] hover:bg-[#de5e73]"
@@ -1824,6 +2218,10 @@ const PatientRegistration = () => {
                             Name:
                           </FormLabel>{" "}
                           <TextField
+                            name="name1"
+                            id="name1"
+                            value={formikLastPage.values.name1}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1834,6 +2232,10 @@ const PatientRegistration = () => {
                             Phone:
                           </FormLabel>
                           <TextField
+                            name="phone1"
+                            id="phone1"
+                            value={formikLastPage.values.phone1}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1844,6 +2246,10 @@ const PatientRegistration = () => {
                             Relationship:
                           </FormLabel>
                           <TextField
+                            name="relationship1"
+                            id="relationship1"
+                            value={formikLastPage.values.relationship1}
+                            onChange={formikLastPage.handleChange}
                             select
                             variant="standard"
                             size="small"
@@ -1866,6 +2272,10 @@ const PatientRegistration = () => {
                             Name:
                           </FormLabel>{" "}
                           <TextField
+                            name="name2"
+                            id="name2"
+                            value={formikLastPage.values.name2}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1876,6 +2286,10 @@ const PatientRegistration = () => {
                             Phone:
                           </FormLabel>
                           <TextField
+                            name="phone2"
+                            id="phone2"
+                            value={formikLastPage.values.phone2}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1886,6 +2300,10 @@ const PatientRegistration = () => {
                             Relationship:
                           </FormLabel>
                           <TextField
+                            name="relationship2"
+                            id="relationship2"
+                            value={formikLastPage.values.relationship2}
+                            onChange={formikLastPage.handleChange}
                             select
                             variant="standard"
                             size="small"
@@ -1908,6 +2326,10 @@ const PatientRegistration = () => {
                             Name:
                           </FormLabel>{" "}
                           <TextField
+                            name="name3"
+                            id="name3"
+                            value={formikLastPage.values.name3}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1918,6 +2340,10 @@ const PatientRegistration = () => {
                             Phone:
                           </FormLabel>
                           <TextField
+                            name="phone3"
+                            id="phone3"
+                            value={formikLastPage.values.phone3}
+                            onChange={formikLastPage.handleChange}
                             variant="standard"
                             size="small"
                             className="ml-2"
@@ -1928,6 +2354,10 @@ const PatientRegistration = () => {
                             Relationship:
                           </FormLabel>
                           <TextField
+                            name="relationship3"
+                            id="relationship3"
+                            value={formikLastPage.values.relationship3}
+                            onChange={formikLastPage.handleChange}
                             select
                             variant="standard"
                             size="small"
@@ -1988,6 +2418,7 @@ const PatientRegistration = () => {
                       endIcon={<MdUploadFile />}
                       variant="contained"
                       className="bg-blue-500 "
+                      type="submit"
                     >
                       Submit
                     </Button>
@@ -2010,65 +2441,105 @@ const PatientRegistration = () => {
         >
           <Alert severity="error">Please fill out the required fields</Alert>
         </Snackbar>
-        {/* {selectedMed && (
-          <div>
-            {" "}
-            {isLoading ? (
-              <Dialog open={selectedMed !== null}>
-                <DialogTitle className="text-center">
-                  Select a dosage
-                </DialogTitle>
-                <DialogContent>
-                  <CircularProgress />
-                </DialogContent>
-              </Dialog>
-            ) : (
-              <Dialog
-                open={selectedMed !== null}
-                maxWidth="md"
-                fullWidth={true}
-              >
-                <DialogTitle className="text-center">
-                  Select a dosage for {selectedMed}
-                </DialogTitle>
-                <DialogContent>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {data.map((med) => {
-                      return (
-                        <Card key={med} className="w-24 p-0">
-                          <CardActionArea>
-                            <CardContent
-                              className="bg-blue-500 text-white text-center
-                            "
-                              onClick={() => {
-                                setMedicationDosageArray([
-                                  ...medicationDosageArray,
-                                  med,
-                                ]);
-                              }}
-                            >
-                              {med}
-                            </CardContent>
-                          </CardActionArea>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </DialogContent>
-                <DialogActions className="flex justify-center">
-                  <Button
-                    onClick={() => setSelectedMed(null)}
-                    className="bg-blue-500"
-                    size="small"
-                    variant="contained"
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          autoHideDuration={2000}
+          open={isValid2 === false}
+          onClose={() => setIsValid2(true)}
+        >
+          <Alert severity="error">Please fill out the required fields</Alert>
+        </Snackbar>
+
+        <Dialog maxWidth="md" fullWidth={true}>
+          <DialogTitle className="text-center">
+            Select a dosage for {selectedMed}
+          </DialogTitle>
+          <DialogContent>
+            <TableRow>
+              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                Father
+              </TableCell>
+              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                <TextField
+                  className="w-20"
+                  id="fatherAge"
+                  name="fatherAge"
+                  type="number"
+                  size="small"
+                  value={formikHistory.values.fatherAge}
+                  onChange={formikHistory.handleChange}
+                />
+              </TableCell>
+              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                <FormControl>
+                  <RadioGroup
+                    id="fatherAlive"
+                    aria-label="fatherAlive"
+                    name="fatherAlive"
+                    value={formikHistory.values.fatherAlive}
+                    onChange={formikHistory.handleChange}
                   >
-                    Close
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            )}
-          </div>
-        )} */}
+                    <FormControlLabel
+                      value={true}
+                      control={<Radio size="small" />}
+                      label="Alive"
+                    />
+                    <FormControlLabel
+                      value={false}
+                      control={<Radio size="small" />}
+                      label="Deceased"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </TableCell>
+              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                <Select
+                  className="w-40"
+                  autoWidth={false}
+                  select
+                  multiple
+                  id="fatherMedicalHistory"
+                  name="fatherMedicalHistory"
+                  size="small"
+                  value={formikHistory.values.fatherMedicalHistory}
+                  onChange={formikHistory.handleChange}
+                >
+                  <MenuItem value="None">None</MenuItem>
+                  <MenuItem value="Diabetes">Diabetes</MenuItem>
+                  <MenuItem value="Hypertension">Hypertension</MenuItem>
+                  <MenuItem value="Heart Disease">Heart Disease</MenuItem>
+                  <MenuItem value="Lung Disease">Lung Disease</MenuItem>
+                  <MenuItem value="Multiple Sclerosis">
+                    Multiple Sclerosis
+                  </MenuItem>
+                  <MenuItem value="ALS">ALS</MenuItem>
+                  <MenuItem value="Dementia">Dementia</MenuItem>
+                  <MenuItem value="Epilepsy">Epilepsy</MenuItem>
+                  <MenuItem value="Parkinson's">Parkinson&apos;s</MenuItem>
+                  <MenuItem value="Stroke">Stroke</MenuItem>
+
+                  <MenuItem value="Schizophrenia"> Schizophrenia</MenuItem>
+                  <MenuItem value="Anxiety">Anxiety</MenuItem>
+                  <MenuItem value="Depression">Depression</MenuItem>
+                  <MenuItem value="Cancer">Cancer</MenuItem>
+                  <MenuItem value="Other Neurological Disorder">
+                    Other Neurological Disorder
+                  </MenuItem>
+                </Select>
+              </TableCell>
+            </TableRow>
+          </DialogContent>
+          <DialogActions className="flex justify-center">
+            <Button
+              onClick={() => setSelectedMed(null)}
+              className="bg-blue-500"
+              size="small"
+              variant="contained"
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog open={sign1}>
           <DialogTitle className="text-center">
