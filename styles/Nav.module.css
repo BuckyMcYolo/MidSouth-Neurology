@@ -17,7 +17,7 @@
 }
 .nav li:hover {
   /* opacity: .75; */
-  color: rgb(222, 94, 115);
+  color: #de5e73;
 }
 .nav li:active {
   opacity: 0.5;
@@ -33,6 +33,12 @@
   /* text-decoration: underline;
   text-decoration-color: black;
   text-decoration-style: solid; */
+}
+.nav_link_current {
+  color: rgb(222, 94, 115);
+  transition: 0.4s ease;
+  padding: 5px;
+  font-weight: 500;
 }
 .styledBurger {
   display: none;

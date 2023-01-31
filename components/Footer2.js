@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const Footer2 = () => {
   return (
-    <div className="flex flex-row bg-grayBackground justify-evenly align-middle text-white">
+    <div className="flex flex-row bg-grayBackground justify-evenly align-middle text-white py-5">
       <p className="pt-5">&#169; MidSouth Neurology 2022</p>{" "}
       <Image
         alt="American Board of Neurology Certificate"

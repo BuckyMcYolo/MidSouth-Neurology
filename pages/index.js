@@ -6,8 +6,11 @@ import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { motion } from "framer-motion";
 import WhyChooseUs from "../components/WhyChooseUs";
+import { useRouter } from "next/router";
+import { Button } from "@mui/material";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="bg-[url('/brainBackground.jpg')] bg-fixed opacity-100">
       <Head>
@@ -41,16 +44,7 @@ export default function Home() {
         <meta name="theme-color" content="#ffffff" />
       </Head>
       <NavBar />
-      <section>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </section>
+      <section className="pt-36"></section>
       <Header />
       <article className={Homestyles.article}>
         <h1 className={Homestyles.statement}>
@@ -71,8 +65,9 @@ export default function Home() {
               transition: { type: "spring", stiffness: 400, damping: 10 },
             }}
             whileTap={{ scale: 0.97 }}
+            onClick={() => router.push("/services")}
           >
-            <Link href="/services">Learn more about our services</Link>
+            Learn more about our services
           </motion.button>
         </p>
       </article>

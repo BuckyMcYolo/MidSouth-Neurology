@@ -46,7 +46,7 @@ const Header = () => {
               see us if you have numbness or pain in your hands or elbows
             </p>
           </motion.li>
-          <motion.l
+          <motion.li
             layout
             data-isOpen={is3Open}
             initial={{ borderRadius: 35 }}
@@ -60,7 +60,7 @@ const Header = () => {
               technology to rule out if you have any abnormal electrical
               activity in your brain.
             </p>
-          </motion.l>
+          </motion.li>
           <motion.li
             layout
             data-isOpen={is4Open}
