@@ -1,8 +1,7 @@
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
-import NewPatientPageStyles from "../styles/NewPatient.module.css";
 import Head from "next/head";
-import { Alert, Button, Container, Paper, TextField } from "@mui/material";
+import { Alert, Button, Container } from "@mui/material";
 import { useRouter } from "next/router";
 
 const NewPatientForm = () => {
@@ -30,7 +29,7 @@ const NewPatientForm = () => {
           </p>
           <div className="text-center">
             <Button
-              onClick={() => router.push("/Patient-Registration")}
+              onClick={() => router.push("/imNotARobot")}
               variant="contained"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded mb-5 "
             >
@@ -39,27 +38,6 @@ const NewPatientForm = () => {
           </div>
         </Alert>
       </Container>
-      {/* <section className="md:bg-[url('/newPatient.png')] bg-contain bg-no-repeat bg-local opacity-100 md:h-96 md:py-96 lg:bg-cover sm:bg-none py-6 sm:py-6">
-        {" "}
-        <h1 className={NewPatientPageStyles.head}>
-          Are you a new patient of Dr. Owens?{" "}
-        </h1>{" "}
-        <p className={NewPatientPageStyles.form}>
-          To help us check you in faster and be better suited to prepare for
-          your appointment, please fill out the new Patient Registration Form
-          below , print it, and bring it with you when you come to your
-          appointment
-        </p>{" "}
-        <article className={NewPatientPageStyles.buttonform}>
-          {" "}
-          <a href="https://onedrive.live.com/?authkey=%21ADwV5hCuVPYMWjM&cid=ECB6A90230453CEF&id=ECB6A90230453CEF%21740&parId=root&o=OneUp">
-            {" "}
-            <button className={NewPatientPageStyles.button}>
-              Patient Registration Form{" "}
-            </button>
-          </a>
-        </article>{" "}
-      </section> */}
 
       <Container>
         <h3 className="flex flex-col items-center justify-center text-xl">

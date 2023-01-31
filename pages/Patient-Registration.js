@@ -67,8 +67,18 @@ const PatientRegistration = () => {
   const [selectedSurgicalHistory, setSelectedSurgicalHistory] =
     React.useState("");
   const [selectedSurgicalHistoryDate, setSelectedSurgicalHistoryDate] =
-    React.useState("");
+    React.useState(null);
   const [surgicalHistoryArray, setSurgicalHistoryArray] = React.useState([]);
+  const [selectedFamilyMember, setSelectedFamilyMember] = React.useState(null);
+  const [selectedFamilyMemberAge, setSelectedFamilyMemberAge] =
+    React.useState(null);
+  const [selectedFamilyMemberAlive, setSelectedFamilyMemberAlive] =
+    React.useState(null);
+  const [
+    selectedFamilyMemberMedicalHistory,
+    setSelectedFamilyMemberMedicalHistory,
+  ] = React.useState([]);
+  const [familyHistoryArray, setFamilyHistoryArray] = React.useState([]);
 
   //third page
   const [sign3, setSign3] = React.useState(false);
@@ -85,6 +95,7 @@ const PatientRegistration = () => {
   const [is5Signed, setIs5Signed] = React.useState(false);
   const [date5Signed, setDate5Signed] = React.useState("");
   const [sign5Error, setSign5Error] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
   const getMeds = async () => {
     const res = await fetch(
@@ -103,7 +114,7 @@ const PatientRegistration = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          subject: `New Patient Registration for ${formik.values.firstName} ${formik.values.lastName}`,
+          subject: `${formik.values.firstName} ${formik.values.lastName} New Patient Registration`,
           template: "registration_form",
           data: {
             name: formik.values.firstName + " " + formik.values.lastName,
@@ -134,6 +145,7 @@ const PatientRegistration = () => {
             medications: medicationFullArray,
             medicalHx: medicalHistoryArray,
             surgicalHx: surgicalHistoryArray,
+            familyHx: familyHistoryArray,
             tabaccoBool: formikHistory.values.useTobaccoBool,
             cigs: formikHistory.values.useCiggarrettes,
             smokeless: formikHistory.values.useChewingTobacco,
@@ -164,7 +176,7 @@ const PatientRegistration = () => {
     if (!res.ok) {
       throw new Error(data.message || "Something went wrong!");
     } else {
-      router.replace("/success");
+      setSuccess(true);
     }
   };
 
@@ -224,43 +236,15 @@ const PatientRegistration = () => {
       heightFt: "",
       heightIn: "",
       weight: "",
-      medications: [],
-      medicalHistory: [],
-      surgicalHistory: [],
-      familyHistory: [],
-      fatherAge: "",
-      fatherAlive: "",
-      fatherMedicalHistory: [],
-      motherAge: "",
-      motherAlive: "",
-      motherMedicalHistory: "",
-      brotherAge: "",
-      brotherAlive: "",
-      brotherMedicalHistory: "",
-      sisterAge: "",
-      sisterAlive: "",
-      sisterMedicalHistory: "",
-      maternalGrandfatherAge: "",
-      maternalGrandfatherAlive: "",
-      maternalGrandfatherMedicalHistory: "",
-      maternalGrandmotherAge: "",
-      maternalGrandmotherAlive: "",
-      maternalGrandmotherMedicalHistory: "",
-      paternalGrandfatherAge: "",
-      paternalGrandfatherAlive: "",
-      paternalGrandfatherMedicalHistory: "",
-      paternalGrandmotherAge: "",
-      paternalGrandmotherAlive: "",
-      paternalGrandmotherMedicalHistory: "",
       useTobaccoBool: "No",
-      useCiggarrettes: "",
-      useChewingTobacco: "",
-      useVapes: "",
-      useOther: "",
+      useCiggarrettes: "0",
+      useChewingTobacco: "0",
+      useVapes: "0",
+      useOther: "0",
       useAlcoholBool: "No",
-      useBeer: "",
-      useWine: "",
-      useLiquor: "",
+      useBeer: "0",
+      useWine: "0",
+      useLiquor: "0",
       useIllicitDrugsPresent: "No",
       useIllicitDrugsPast: "No",
       useIllicitDrugs: "",
@@ -367,14 +351,6 @@ const PatientRegistration = () => {
     }
   };
 
-  const nextPage5 = () => {
-    if (!is5Signed) {
-      setSign5Error(true);
-    } else {
-      nextPage();
-    }
-  };
-
   const handleInputChange = (event, newValue) => {
     setTerms(newValue);
   };
@@ -395,14 +371,18 @@ const PatientRegistration = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    sendEmail();
+    if (!is5Signed) {
+      setSign5Error(true);
+    } else {
+      sendEmail();
+    }
   };
 
   const fixedDob = new Date(formik.values.dob).toLocaleDateString("en-US");
   const fixedInsuredDob = new Date(formik.values.insuredDOB).toLocaleDateString(
     "en-US"
   );
-  console.log(new Date().toLocaleString());
+  console.log(familyHistoryArray);
   return (
     <div className="pb-12">
       <NavBar />
@@ -843,6 +823,12 @@ const PatientRegistration = () => {
                               size="small"
                               onBlur={formik.handleBlur}
                               className=" ml-0 sm:ml-2 w-40 "
+                              error={
+                                formik.touched.insuredDOB &&
+                                formik.errors.insuredDOB
+                                  ? true
+                                  : false
+                              }
                             />
                           )}
                         />
@@ -1273,15 +1259,20 @@ const PatientRegistration = () => {
                           setSelectedDosage(e.target.value);
                         }}
                       >
-                        {fetchedMeds ? (
+                        {!fetchedMeds ? (
+                          <MenuItem>No Dosage Available</MenuItem>
+                        ) : fetchedMeds[2].STRENGTHS_AND_FORMS == undefined ? (
+                          <MenuItem>No Dosage Available</MenuItem>
+                        ) : fetchedMeds && fetchedMeds.length >= 1 ? (
                           fetchedMeds[2].STRENGTHS_AND_FORMS[0].map(
                             (dosage) => (
                               <MenuItem value={dosage}>{dosage}</MenuItem>
                             )
                           )
                         ) : (
-                          <MenuItem value="No Dosage Available"></MenuItem>
+                          <MenuItem>No Dosage Available</MenuItem>
                         )}
+                        {console.log(fetchedMeds)}
                       </TextField>
                       <TextField
                         disabled={selectedMed ? false : true}
@@ -1323,9 +1314,9 @@ const PatientRegistration = () => {
                             setTerms("");
                           }}
                           disabled={
-                            selectedMed == null || selectedFrequency == null
-                              ? true
-                              : false
+                            selectedMed == null ||
+                            selectedFrequency == null ||
+                            !selectedDosage
                           }
                           variant="outlined"
                           endIcon={<MdAddCircleOutline />}
@@ -1606,6 +1597,194 @@ const PatientRegistration = () => {
                     <InputLabel className="text-center text-xl pb-5 underline underline-offset-8">
                       Family History
                     </InputLabel>
+                    <div className="flex flex-col md:flex-row md:justify-between items-center">
+                      <Select
+                        className="w-60 md:w-36 mr-2 my-3 "
+                        placeholder="Family Member"
+                        name="familyMember"
+                        id="familyMember"
+                        size="small"
+                        value={selectedFamilyMember}
+                        onChange={(e) =>
+                          setSelectedFamilyMember(e.target.value)
+                        }
+                      >
+                        <MenuItem value="Father">Father</MenuItem>
+                        <MenuItem value="Mother">Mother</MenuItem>
+                        <MenuItem value="Brother">Brother</MenuItem>
+                        <MenuItem value="Sister">Sister</MenuItem>
+                        <MenuItem value=" Maternal Grandfather">
+                          Maternal Grandfather
+                        </MenuItem>
+                        <MenuItem value="Maternal Grandmother">
+                          Maternal Grandmother
+                        </MenuItem>
+                        <MenuItem value="Paternal Grandfather">
+                          Paternal Grandfather
+                        </MenuItem>
+                        <MenuItem value="Paternal Grandmother">
+                          Paternal Grandmother
+                        </MenuItem>
+                      </Select>
+
+                      <TextField
+                        className="w-20 mr-2 my-3 md:my-0"
+                        id={"familyMemberAge"}
+                        name={"familyMemberAge"}
+                        type="number"
+                        value={selectedFamilyMemberAge}
+                        onChange={(e) =>
+                          setSelectedFamilyMemberAge(e.target.value)
+                        }
+                        label="Age"
+                        size="small"
+                      ></TextField>
+                      <FormControl>
+                        <RadioGroup
+                          row
+                          aria-label="position"
+                          name="selectedFamilyMemberAlive"
+                          id="selectedFamilyMemberAlive"
+                          defaultValue="Alive"
+                          value={selectedFamilyMemberAlive}
+                          onChange={(e) =>
+                            setSelectedFamilyMemberAlive(e.target.value)
+                          }
+                        >
+                          <FormControlLabel
+                            value={"Alive"}
+                            control={<Radio size="small" />}
+                            label="Alive"
+                          />
+                          <FormControlLabel
+                            value={"Deceased"}
+                            control={<Radio size="small" />}
+                            label="Deceased"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                      <Select
+                        multiple
+                        className="w-60 md:w-36 mr-2 my-3 "
+                        placeholder="Medical History"
+                        name="disease"
+                        id="disease"
+                        size="small"
+                        MenuProps={{
+                          sx: {
+                            width: "100%",
+                            maxHeight: "300px",
+                          },
+                        }}
+                        value={selectedFamilyMemberMedicalHistory}
+                        onChange={(e) =>
+                          setSelectedFamilyMemberMedicalHistory(e.target.value)
+                        }
+                      >
+                        <MenuItem value="None">None</MenuItem>
+                        <MenuItem value="Diabetes">Diabetes</MenuItem>
+                        <MenuItem value="Hypertension">Hypertension</MenuItem>
+                        <MenuItem value="Heart Disease">Heart Disease</MenuItem>
+                        <MenuItem value="Lung Disease">Lung Disease</MenuItem>
+                        <MenuItem value="Asthma">Asthma</MenuItem>{" "}
+                        <MenuItem value="COPD">COPD</MenuItem>
+                        <MenuItem value="Kidney Disease">
+                          Kidney Disease
+                        </MenuItem>
+                        <MenuItem value="Liver Disease">Liver Disease</MenuItem>
+                        <MenuItem value="Arthritis">Arthritis</MenuItem>
+                        <MenuItem value="Cancer">Cancer</MenuItem>
+                        <MenuItem value="Sleep Apnea">Sleep Apnea</MenuItem>
+                        <MenuItem value="Multiple Sclerosis">
+                          Multiple Sclerosis
+                        </MenuItem>
+                        <MenuItem value="Migraines">Migraines</MenuItem>
+                        <MenuItem value="ALS">ALS</MenuItem>
+                        <MenuItem value="Dementia">Dementia</MenuItem>
+                        <MenuItem value="Alzheimer's disease">
+                          Alzheimer&apos;s disease
+                        </MenuItem>
+                        <MenuItem value="Epilepsy">Epilepsy</MenuItem>
+                        <MenuItem value="Parkinson's">
+                          Parkinson&apos;s
+                        </MenuItem>
+                        <MenuItem value="Stroke">Stroke</MenuItem>
+                        <MenuItem value="TIA">TIA</MenuItem>
+                        <MenuItem value="Bipolar Disorder">
+                          Bipolar Disorder
+                        </MenuItem>
+                        <MenuItem value="Schizophrenia">
+                          {" "}
+                          Schizophrenia
+                        </MenuItem>
+                        <MenuItem value="Anxiety">Anxiety</MenuItem>
+                        <MenuItem value="Depression">Depression</MenuItem>
+                        <MenuItem value="Other Neurological Disorder">
+                          Other Neurological Disorder
+                        </MenuItem>
+                        <MenuItem value="Lupus">Lupus</MenuItem>
+                        <MenuItem value="Sjogren's Syndrome">
+                          Sjogren&apos;s Syndrome
+                        </MenuItem>
+                        <MenuItem value="Scleroderma">Scleroderma</MenuItem>
+                        <MenuItem value="Sarcoidosis">Sarcoidosis</MenuItem>
+                        <MenuItem value="Hashimoto's Thyroiditis">
+                          Hashimoto&apos;s Thyroiditis
+                        </MenuItem>
+                        <MenuItem value="Graves' Disease">
+                          Graves&apos; Disease
+                        </MenuItem>
+                        <MenuItem value="Celiac Disease">
+                          Celiac Disease
+                        </MenuItem>
+                        <MenuItem value="Crohn's Disease">
+                          Crohn&apos;s Disease
+                        </MenuItem>
+                        <MenuItem value="Ulcerative Colitis">
+                          Ulcerative Colitis
+                        </MenuItem>
+                        <MenuItem value="Psoriasis">Psoriasis</MenuItem>
+                        <MenuItem value="Psoriatic Arthritis">
+                          Psoriatic Arthritis
+                        </MenuItem>
+                        <MenuItem value="Vitiligo">Vitiligo</MenuItem>
+                        <MenuItem value="Other Autoimmune Disease">
+                          Other Autoimmune Disease
+                        </MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
+                      </Select>
+
+                      <div className="ml-2">
+                        <Button
+                          disabled={
+                            !selectedFamilyMemberAge ||
+                            !selectedFamilyMemberAlive ||
+                            !selectedFamilyMember ||
+                            selectedFamilyMemberMedicalHistory.length === 0
+                          }
+                          onClick={() => {
+                            setFamilyHistoryArray((prev) => [
+                              ...prev,
+                              {
+                                familyMember: selectedFamilyMember,
+                                age: selectedFamilyMemberAge,
+                                alive: selectedFamilyMemberAlive,
+                                medicalHistory:
+                                  selectedFamilyMemberMedicalHistory,
+                              },
+                            ]);
+                            setSelectedFamilyMember(null);
+                            setSelectedFamilyMemberAge("");
+                            setSelectedFamilyMemberAlive(null);
+                            setSelectedFamilyMemberMedicalHistory([]);
+                          }}
+                          variant="outlined"
+                          endIcon={<MdAddCircleOutline />}
+                        >
+                          add
+                        </Button>{" "}
+                      </div>
+                    </div>{" "}
                     <TableContainer
                       component={Paper}
                       className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
@@ -1626,9 +1805,49 @@ const PatientRegistration = () => {
                             <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
                               Medical History
                             </TableCell>
+                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4 maxsm:hidden">
+                              Delete
+                            </TableCell>
                           </TableRow>
                         </TableHead>
-                        <TableBody></TableBody>
+                        <TableBody>
+                          {familyHistoryArray.map((item, index) => (
+                            <TableRow key={index}>
+                              <TableCell className="p-2 sm:p-4">
+                                {item.familyMember}
+                              </TableCell>
+                              <TableCell className="p-2 sm:p-4">
+                                {item.age}
+                              </TableCell>
+                              <TableCell className="p-2 sm:p-4">
+                                {item.alive}
+                              </TableCell>
+                              <TableCell className="p-2 sm:p-4 ">
+                                {item.medicalHistory.map((item, index) => (
+                                  <ul key={index} className="list-disc ">
+                                    <li> {item}</li>
+                                  </ul>
+                                ))}{" "}
+                              </TableCell>
+                              <TableCell className="p-2 sm:p-4 maxsm:hidden">
+                                <IconButton
+                                  onClick={() => {
+                                    setFamilyHistoryArray((prev) => {
+                                      const newArray = [...prev];
+                                      newArray.splice(index, 1);
+                                      return newArray;
+                                    });
+                                  }}
+                                >
+                                  <MdDelete
+                                    className="text-red-500"
+                                    size={25}
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
                       </Table>
                     </TableContainer>
                   </div>
@@ -2425,7 +2644,7 @@ const PatientRegistration = () => {
                   </div>
                   {sign5Error && (
                     <p className="text-red-500 text-center text-base">
-                      You must sign the document before continuing
+                      You must sign the document before submitting
                     </p>
                   )}
                 </section>
@@ -2459,17 +2678,7 @@ const PatientRegistration = () => {
               <TableCell className="text-xs md:text-base p-2 sm:p-4">
                 Father
               </TableCell>
-              <TableCell className="text-xs md:text-base p-2 sm:p-4">
-                <TextField
-                  className="w-20"
-                  id="fatherAge"
-                  name="fatherAge"
-                  type="number"
-                  size="small"
-                  value={formikHistory.values.fatherAge}
-                  onChange={formikHistory.handleChange}
-                />
-              </TableCell>
+              <TableCell className="text-xs md:text-base p-2 sm:p-4"></TableCell>
               <TableCell className="text-xs md:text-base p-2 sm:p-4">
                 <FormControl>
                   <RadioGroup
@@ -2640,6 +2849,33 @@ const PatientRegistration = () => {
               variant="contained"
             >
               sign
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={success} className="maxxs1:max-w-[300px] ">
+          <DialogTitle className="text-center text-2xl text-green-500 bg-[#333333] underline underline-offset-8">
+            Success!
+          </DialogTitle>
+          <DialogContent className="bg-[#333333] text-white">
+            <DialogContentText className="text-white">
+              <h2>
+                Thank you for submitting your paperwork online. By doing so, we
+                both saved time and made the process more convenient. We'll be
+                in touch soon to schedule an appointment, if one has not already
+                been scheduled.
+              </h2>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions className="flex justify-center bg-[#333333] ">
+            <Button
+              className="bg-green-600 text-white hover:bg-green-700 active:bg-green-600"
+              variant="contained"
+              onClick={() => {
+                router.replace("/");
+              }}
+            >
+              Back to homepage
             </Button>
           </DialogActions>
         </Dialog>
