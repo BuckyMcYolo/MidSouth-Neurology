@@ -11,6 +11,7 @@ import {
 import ReCAPTCHA from "react-google-recaptcha";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { BiErrorCircle } from "react-icons/bi";
 
 const Robot = (props) => {
   const [width, setWidth] = useState(400);
@@ -86,7 +87,11 @@ const Robot = (props) => {
       </Card>
 
       <Snackbar open={error}>
-        <Alert severity="error">
+        <Alert
+          icon={<BiErrorCircle className="text-white" />}
+          className="bg-red-500 text-white rounded-lg"
+          severity="error"
+        >
           Error validating reCaptcha, please try again or refresh the page.
         </Alert>
       </Snackbar>

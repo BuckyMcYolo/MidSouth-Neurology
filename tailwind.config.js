@@ -14,13 +14,16 @@ module.exports = {
       maxxs1: { max: "320px" },
       maxxs2: { max: "375px" },
       maxxs3: { max: "425px" },
+      minxs: { min: "320px" },
+      minxs2: { min: "375px" },
+      minsm: { min: "425px" },
     },
     extend: {
       backgroundImage: {
         brainPic: "url('/brainBackground.jpg')",
       },
       colors: {
-        grayBackground: "hsl(0, 0%, 20%)",
+        grayBackground: "#333333",
       },
     },
   },

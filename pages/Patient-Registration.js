@@ -34,10 +34,18 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import NavBar from "../components/NavBar";
 import { SiDocusign } from "react-icons/si";
-import { MdUploadFile, MdAddCircleOutline, MdDelete } from "react-icons/md";
+import {
+  MdUploadFile,
+  MdAddCircleOutline,
+  MdDelete,
+  MdOutlineDeleteOutline,
+} from "react-icons/md";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { CgTrash } from "react-icons/cg";
+import { BiErrorCircle } from "react-icons/bi";
+import usePromptIfDirty from "../components/Prompt";
 
 const PatientRegistration = () => {
   const router = useRouter();
@@ -71,9 +79,9 @@ const PatientRegistration = () => {
   const [surgicalHistoryArray, setSurgicalHistoryArray] = React.useState([]);
   const [selectedFamilyMember, setSelectedFamilyMember] = React.useState(null);
   const [selectedFamilyMemberAge, setSelectedFamilyMemberAge] =
-    React.useState(null);
+    React.useState("");
   const [selectedFamilyMemberAlive, setSelectedFamilyMemberAlive] =
-    React.useState(null);
+    React.useState("");
   const [
     selectedFamilyMemberMedicalHistory,
     setSelectedFamilyMemberMedicalHistory,
@@ -360,14 +368,13 @@ const PatientRegistration = () => {
 
   console.log(selectedMed);
 
-  const {
-    data: fetchedMeds,
-    isLoading,
-    isError,
-    error,
-  } = useQuery(["medications", terms], getMeds, {
-    refetchOnWindowFocus: true,
-  });
+  const { data: fetchedMeds, isLoading } = useQuery(
+    ["medications", terms],
+    getMeds,
+    {
+      refetchOnWindowFocus: true,
+    }
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -382,15 +389,16 @@ const PatientRegistration = () => {
   const fixedInsuredDob = new Date(formik.values.insuredDOB).toLocaleDateString(
     "en-US"
   );
-  console.log(familyHistoryArray);
+  const [Prompt] = usePromptIfDirty(display < 5);
   return (
     <div className="pb-12">
       <NavBar />
+      <Prompt />
       <Container>
         <Paper>
           <Container className="flex flex-col items-center mt-8 text-lg md:text-xl">
             {display == 1 && (
-              <div className="text-center border mt-3 pb-3 px-2 rounded-lg border-black border-solid">
+              <div className="text-center mt-3 pb-3 px-2 rounded-lg ">
                 <h1 className="text-2xl md:text-3xl underline underline-offset-8 py-4">
                   Patient Registration Form
                 </h1>
@@ -432,7 +440,7 @@ const PatientRegistration = () => {
                         Patient&apos;s First Name:{" "}
                       </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="firstName"
                         name="firstName"
                         type="text"
@@ -461,7 +469,7 @@ const PatientRegistration = () => {
                         Patient&apos;s Last Name:{" "}
                       </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="lastName"
                         name="lastName"
                         type="text"
@@ -490,7 +498,7 @@ const PatientRegistration = () => {
                         Patient&apos;s Date of birth:{" "}
                       </InputLabel>
                       <DatePicker
-                        className="mt-2 sm:mt-0 ml-0 sm:ml-2"
+                        className="mt-2 sm:mt-0 ml-0 sm:ml-2 w-full sm:w-48"
                         id="dob"
                         name="dob"
                         onChange={(event) => {
@@ -522,13 +530,13 @@ const PatientRegistration = () => {
                     </div>{" "}
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="social">
-                        Patient&apos;s SS#:{" "}
+                        Patient&apos;s SS# :{" "}
                       </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="social"
                         name="social"
-                        type="text"
+                        type="number"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.social}
@@ -554,7 +562,7 @@ const PatientRegistration = () => {
                         Family Physician (PCP):{" "}
                       </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="pcp"
                         name="pcp"
                         type="text"
@@ -585,7 +593,7 @@ const PatientRegistration = () => {
                         Street Address:{" "}
                       </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="address"
                         name="address"
                         type="text"
@@ -612,7 +620,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="city">City: </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="city"
                         name="city"
                         type="text"
@@ -639,7 +647,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="state">State: </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="state"
                         name="state"
                         type="text"
@@ -666,7 +674,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="zip">Zip: </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="zip"
                         name="zip"
                         type="text"
@@ -696,7 +704,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="phone">Mobile Phone: </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="phone"
                         name="phone"
                         type="tel"
@@ -723,7 +731,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="email">Email: </InputLabel>
                       <TextField
-                        className="sm:ml-2"
+                        className="sm:ml-2 w-full sm:w-48"
                         id="email"
                         name="email"
                         type="email"
@@ -754,7 +762,7 @@ const PatientRegistration = () => {
 
                       <TextField
                         select
-                        className=" ml-0 sm:ml-2 w-24 "
+                        className=" ml-0 sm:ml-2 w-full sm:w-24 "
                         variant="standard"
                         id="prefferedContact"
                         name="prefferedContact"
@@ -793,7 +801,7 @@ const PatientRegistration = () => {
                           Insured Name:{" "}
                         </InputLabel>
                         <TextField
-                          className=" ml-0 sm:ml-2 w-40 "
+                          className=" ml-0 sm:ml-2 w-full sm:w-40 "
                           id="insuredName"
                           name="insuredName"
                           type="text"
@@ -822,7 +830,7 @@ const PatientRegistration = () => {
                               variant="standard"
                               size="small"
                               onBlur={formik.handleBlur}
-                              className=" ml-0 sm:ml-2 w-40 "
+                              className=" ml-0 sm:ml-2 sm:w-40 w-full"
                               error={
                                 formik.touched.insuredDOB &&
                                 formik.errors.insuredDOB
@@ -838,7 +846,7 @@ const PatientRegistration = () => {
                           Insured Social:{" "}
                         </InputLabel>
                         <TextField
-                          className=" ml-0 sm:ml-2 w-40 "
+                          className=" ml-0 sm:ml-2 sm:w-40 w-full "
                           id="insuredSocial"
                           name="insuredSocial"
                           type="number"
@@ -921,7 +929,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel>Reason for visit</InputLabel>
                       <TextField
-                        className="ml-0 sm:ml-2"
+                        className="ml-0 sm:ml-2 w-full sm:w-40"
                         id="reasonForVisit"
                         name="reasonForVisit"
                         type="text"
@@ -952,7 +960,7 @@ const PatientRegistration = () => {
                         Refferring Physician
                       </InputLabel>
                       <TextField
-                        className="ml-0 sm:ml-2"
+                        className="ml-0 sm:ml-2 w-full sm:w-40"
                         id="refferringMD"
                         name="refferringMD"
                         type="text"
@@ -983,7 +991,7 @@ const PatientRegistration = () => {
                         Current Pharmacy
                       </InputLabel>
                       <TextField
-                        className="ml-0 sm:ml-2"
+                        className="ml-0 sm:ml-2 w-full sm:w-40"
                         id="pharmacy"
                         name="pharmacy"
                         type="text"
@@ -1015,7 +1023,7 @@ const PatientRegistration = () => {
                           Height (feet)
                         </InputLabel>
                         <TextField
-                          className="w-12 ml-0 sm:ml-2"
+                          className="w-16 ml-0 sm:ml-2"
                           id="heightFt"
                           name="heightFt"
                           type="number"
@@ -1046,7 +1054,7 @@ const PatientRegistration = () => {
                           Height (inches)
                         </InputLabel>
                         <TextField
-                          className="w-12 sm:ml-2 m-0"
+                          className="w-16 sm:ml-2 m-0"
                           id="heightIn"
                           name="heightIn"
                           type="number"
@@ -1076,7 +1084,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col items-start sm:flex-row sm:items-center my-2">
                       <InputLabel htmlFor="weight">Weight (lbs)</InputLabel>
                       <TextField
-                        className="ml-0 sm:ml-2"
+                        className="ml-0 sm:ml-2 w-20"
                         id="weight"
                         name="weight"
                         type="number"
@@ -1113,7 +1121,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col md:flex-row items-center justify-center">
                       <TextField
                         label="Allergy"
-                        className="my-3 md:mr-2"
+                        className="my-3 md:mr-2 w-64 sm:w-56"
                         id={"allergies"}
                         name={"allergies"}
                         type="text"
@@ -1123,7 +1131,7 @@ const PatientRegistration = () => {
                       />
                       <TextField
                         label="Reaction"
-                        className="w-36 mb-3 md:my-0 md:mr-2"
+                        className="w-64 sm:w-56 md:w-36 mb-3 md:my-0 md:mr-2"
                         id="allergyReaction"
                         name="allergyReaction"
                         size="small"
@@ -1149,7 +1157,6 @@ const PatientRegistration = () => {
                           selectedAllergyReaction === ""
                         }
                         variant="outlined"
-                        className=""
                         endIcon={<MdAddCircleOutline />}
                         onClick={() => {
                           setAllergyArray([
@@ -1168,19 +1175,23 @@ const PatientRegistration = () => {
                     </div>
                     <TableContainer
                       component={Paper}
-                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      className="mt-3 max-w-[300px] minxs:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
                       style={{ maxHeight: 300 }}
                     >
-                      <Table stickyHeader aria-label="sticky table">
+                      <Table
+                        stickyHeader
+                        aria-label="sticky table"
+                        className="shadow-lg "
+                      >
                         <TableHead>
                           <TableRow>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4 font-[Roboto] bg-neutral-100">
                               Allergy
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg   font-semibold p-2 sm:p-4 font-[Roboto] bg-neutral-100">
                               Reaction
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4 font-[Roboto] bg-neutral-100">
                               Delete
                             </TableCell>
                           </TableRow>
@@ -1188,14 +1199,14 @@ const PatientRegistration = () => {
                         <TableBody>
                           {allergyArray.map((allergy, index) => (
                             <TableRow key={index}>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4 text-black">
                                 {allergy.name}
                               </TableCell>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4 text-black">
                                 {allergy.reaction}
                               </TableCell>
 
-                              <TableCell className="p-2">
+                              <TableCell className="p-2 ">
                                 <IconButton
                                   onClick={() => {
                                     setAllergyArray(
@@ -1207,10 +1218,7 @@ const PatientRegistration = () => {
                                   }}
                                 >
                                   {" "}
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -1328,22 +1336,22 @@ const PatientRegistration = () => {
                     </div>{" "}
                     <TableContainer
                       component={Paper}
-                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      className="mt-3 max-w-[300px] minxs2:max-w-[360px] minsm:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
                       style={{ maxHeight: 300 }}
                     >
                       <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                           <TableRow>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4  bg-neutral-100">
                               Medication
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4  bg-neutral-100">
                               Dosage
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4  bg-neutral-100">
                               Frequency
                             </TableCell>
-                            <TableCell className="maxsm:hidden text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="maxsm:hidden text-base md:text-lg font-semibold p-2 sm:p-4  bg-neutral-100">
                               Delete
                             </TableCell>
                           </TableRow>
@@ -1351,13 +1359,13 @@ const PatientRegistration = () => {
                         <TableBody>
                           {medicationFullArray.map((med, index) => (
                             <TableRow key={index}>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {med.name}
                               </TableCell>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {med.dosage}
                               </TableCell>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {med.frequency}
                                 <IconButton
                                   className="sm:hidden"
@@ -1368,10 +1376,7 @@ const PatientRegistration = () => {
                                   }}
                                 >
                                   {" "}
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                               <TableCell className="maxsm:hidden p-0">
@@ -1383,10 +1388,7 @@ const PatientRegistration = () => {
                                   }}
                                 >
                                   {" "}
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -1402,7 +1404,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col md:flex-row items-center justify-center">
                       <TextField
                         label="Medical Condition"
-                        className="my-3 md:mr-2"
+                        className="my-3 md:mr-2 w-64 "
                         id={"medicalHistory"}
                         name={"medicalHistory"}
                         type="text"
@@ -1434,17 +1436,17 @@ const PatientRegistration = () => {
                     </div>
                     <TableContainer
                       component={Paper}
-                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      className="mt-3 max-w-[300px] minxs:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
                       style={{ maxHeight: 300 }}
                     >
                       <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                           <TableRow>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4 bg-neutral-100">
                               Medical Condition
                             </TableCell>
 
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg font-semibold p-2 sm:p-4 bg-neutral-100">
                               Delete
                             </TableCell>
                           </TableRow>
@@ -1452,7 +1454,7 @@ const PatientRegistration = () => {
                         <TableBody>
                           {medicalHistoryArray.map((history, index) => (
                             <TableRow key={index}>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {history.name}
                               </TableCell>
 
@@ -1465,10 +1467,7 @@ const PatientRegistration = () => {
                                   }}
                                 >
                                   {" "}
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -1484,7 +1483,7 @@ const PatientRegistration = () => {
                     <div className="flex flex-col md:flex-row items-center justify-center">
                       <TextField
                         label="Surgery / Procedure"
-                        className="mt-3 sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
+                        className="mt-3 sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3 w-64 md:w-auto"
                         id={"surgicalHistory"}
                         name={"surgicalHistory"}
                         type="text"
@@ -1495,7 +1494,7 @@ const PatientRegistration = () => {
                         }
                       />
                       <DatePicker
-                        className=" sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
+                        className="w-64 md:w-auto sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
                         id="dob"
                         name="dob"
                         label="Date of Surgery"
@@ -1546,19 +1545,19 @@ const PatientRegistration = () => {
                     {console.log(surgicalHistoryArray)}
                     <TableContainer
                       component={Paper}
-                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      className="mt-3 max-w-[300px] minxs:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
                       style={{ maxHeight: 300 }}
                     >
                       <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                           <TableRow>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg  p-2 font-semibold sm:p-4 bg-neutral-100">
                               Surgery / Procedure
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg  p-2 font-semibold sm:p-4 bg-neutral-100">
                               Date
                             </TableCell>
-                            <TableCell className="text-sm md:text-lg font-semibold p-2 sm:p-4">
+                            <TableCell className="text-base md:text-lg  p-2 font-semibold sm:p-4 bg-neutral-100">
                               Delete
                             </TableCell>
                           </TableRow>
@@ -1566,10 +1565,10 @@ const PatientRegistration = () => {
                         <TableBody>
                           {surgicalHistoryArray.map((surgery, index) => (
                             <TableRow key={index}>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {surgery.name}
                               </TableCell>
-                              <TableCell className="text-xs md:text-base p-2 sm:p-4">
+                              <TableCell className="text-sm md:text-base p-2 sm:p-4">
                                 {new Date(surgery.date).toDateString()}
                               </TableCell>
                               <TableCell className="p-2">
@@ -1581,10 +1580,7 @@ const PatientRegistration = () => {
                                   }}
                                 >
                                   {" "}
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -1599,6 +1595,14 @@ const PatientRegistration = () => {
                     </InputLabel>
                     <div className="flex flex-col md:flex-row md:justify-between items-center">
                       <Select
+                        displayEmpty={true}
+                        renderValue={(selected) =>
+                          !selectedFamilyMember ? (
+                            <em>Select Family Member</em>
+                          ) : (
+                            selectedFamilyMember
+                          )
+                        }
                         className="w-60 md:w-36 mr-2 my-3 "
                         placeholder="Family Member"
                         name="familyMember"
@@ -1666,7 +1670,14 @@ const PatientRegistration = () => {
                       <Select
                         multiple
                         className="w-60 md:w-36 mr-2 my-3 "
-                        placeholder="Medical History"
+                        displayEmpty={true}
+                        renderValue={(selected) => {
+                          if (selected.length === 0) {
+                            return <em>Select Medical History</em>;
+                          } else {
+                            return selected.join(", ");
+                          }
+                        }}
                         name="disease"
                         id="disease"
                         size="small"
@@ -1787,7 +1798,7 @@ const PatientRegistration = () => {
                     </div>{" "}
                     <TableContainer
                       component={Paper}
-                      className="mt-3 maxsm:max-w-[300px] md:max-w-2xl"
+                      className="mt-3 max-w-[300px] minxs:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
                       style={{ maxHeight: 600 }}
                     >
                       <Table aria-label="Family history table">
@@ -1839,10 +1850,7 @@ const PatientRegistration = () => {
                                     });
                                   }}
                                 >
-                                  <MdDelete
-                                    className="text-red-500"
-                                    size={25}
-                                  />
+                                  <CgTrash className="text-red-500" size={25} />
                                 </IconButton>
                               </TableCell>
                             </TableRow>
@@ -1890,6 +1898,7 @@ const PatientRegistration = () => {
                                 Cigarettes/Cigars
                               </FormLabel>
                               <TextField
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -1905,6 +1914,7 @@ const PatientRegistration = () => {
                                 Smokeless
                               </FormLabel>
                               <TextField
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -1919,6 +1929,7 @@ const PatientRegistration = () => {
                                 E-cig/Vape
                               </FormLabel>
                               <TextField
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -1965,7 +1976,7 @@ const PatientRegistration = () => {
                             <div className="flex items-center">
                               <FormLabel htmlFor="useBeer">Beer</FormLabel>
                               <TextField
-                                type={"number"}
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -1978,7 +1989,7 @@ const PatientRegistration = () => {
                             <div className="flex items-center">
                               <FormLabel htmlFor="useWine">Wine</FormLabel>
                               <TextField
-                                type={"number"}
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -1991,7 +2002,7 @@ const PatientRegistration = () => {
                             <div className="flex items-center">
                               <FormLabel htmlFor="useLiquor">Liquor</FormLabel>
                               <TextField
-                                type={"number"}
+                                type="number"
                                 placeholder="Amount"
                                 className="ml-2 w-24 mt-2"
                                 size="small"
@@ -2658,7 +2669,13 @@ const PatientRegistration = () => {
           open={isValid === false}
           onClose={() => setIsValid(true)}
         >
-          <Alert severity="error">Please fill out the required fields</Alert>
+          <Alert
+            icon={<BiErrorCircle className="text-white" />}
+            className="bg-red-500 text-white rounded-lg"
+            severity="error"
+          >
+            Please fill out the required fields
+          </Alert>
         </Snackbar>
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -2666,89 +2683,14 @@ const PatientRegistration = () => {
           open={isValid2 === false}
           onClose={() => setIsValid2(true)}
         >
-          <Alert severity="error">Please fill out the required fields</Alert>
+          <Alert
+            icon={<BiErrorCircle className="text-white" />}
+            className="bg-red-500 text-white rounded-lg"
+            severity="error"
+          >
+            Please fill out the required fields
+          </Alert>
         </Snackbar>
-
-        <Dialog maxWidth="md" fullWidth={true}>
-          <DialogTitle className="text-center">
-            Select a dosage for {selectedMed}
-          </DialogTitle>
-          <DialogContent>
-            <TableRow>
-              <TableCell className="text-xs md:text-base p-2 sm:p-4">
-                Father
-              </TableCell>
-              <TableCell className="text-xs md:text-base p-2 sm:p-4"></TableCell>
-              <TableCell className="text-xs md:text-base p-2 sm:p-4">
-                <FormControl>
-                  <RadioGroup
-                    id="fatherAlive"
-                    aria-label="fatherAlive"
-                    name="fatherAlive"
-                    value={formikHistory.values.fatherAlive}
-                    onChange={formikHistory.handleChange}
-                  >
-                    <FormControlLabel
-                      value={true}
-                      control={<Radio size="small" />}
-                      label="Alive"
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={<Radio size="small" />}
-                      label="Deceased"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </TableCell>
-              <TableCell className="text-xs md:text-base p-2 sm:p-4">
-                <Select
-                  className="w-40"
-                  autoWidth={false}
-                  select
-                  multiple
-                  id="fatherMedicalHistory"
-                  name="fatherMedicalHistory"
-                  size="small"
-                  value={formikHistory.values.fatherMedicalHistory}
-                  onChange={formikHistory.handleChange}
-                >
-                  <MenuItem value="None">None</MenuItem>
-                  <MenuItem value="Diabetes">Diabetes</MenuItem>
-                  <MenuItem value="Hypertension">Hypertension</MenuItem>
-                  <MenuItem value="Heart Disease">Heart Disease</MenuItem>
-                  <MenuItem value="Lung Disease">Lung Disease</MenuItem>
-                  <MenuItem value="Multiple Sclerosis">
-                    Multiple Sclerosis
-                  </MenuItem>
-                  <MenuItem value="ALS">ALS</MenuItem>
-                  <MenuItem value="Dementia">Dementia</MenuItem>
-                  <MenuItem value="Epilepsy">Epilepsy</MenuItem>
-                  <MenuItem value="Parkinson's">Parkinson&apos;s</MenuItem>
-                  <MenuItem value="Stroke">Stroke</MenuItem>
-
-                  <MenuItem value="Schizophrenia"> Schizophrenia</MenuItem>
-                  <MenuItem value="Anxiety">Anxiety</MenuItem>
-                  <MenuItem value="Depression">Depression</MenuItem>
-                  <MenuItem value="Cancer">Cancer</MenuItem>
-                  <MenuItem value="Other Neurological Disorder">
-                    Other Neurological Disorder
-                  </MenuItem>
-                </Select>
-              </TableCell>
-            </TableRow>
-          </DialogContent>
-          <DialogActions className="flex justify-center">
-            <Button
-              onClick={() => setSelectedMed(null)}
-              className="bg-blue-500"
-              size="small"
-              variant="contained"
-            >
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
 
         <Dialog open={sign1}>
           <DialogTitle className="text-center">
@@ -2860,10 +2802,10 @@ const PatientRegistration = () => {
           <DialogContent className="bg-[#333333] text-white">
             <DialogContentText className="text-white">
               <h2>
-                Thank you for submitting your paperwork online. By doing so, we
-                both saved time and made the process more convenient. We'll be
-                in touch soon to schedule an appointment, if one has not already
-                been scheduled.
+                Thank you for submitting your paperwork online. By doing so, you
+                saved us paper and yourself time and made the process more
+                convenient. We'll be in touch soon to schedule an appointment,
+                if one has not already been scheduled.
               </h2>
             </DialogContentText>
           </DialogContent>

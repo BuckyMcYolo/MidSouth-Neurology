@@ -31,7 +31,7 @@ const NewPatientForm = () => {
             <Button
               onClick={() => router.push("/imNotARobot")}
               variant="contained"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded mb-5 "
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded mb-5 font-sans"
             >
               Take me to the form
             </Button>
