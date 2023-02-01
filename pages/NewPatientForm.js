@@ -29,7 +29,7 @@ const NewPatientForm = () => {
           </p>
           <div className="text-center">
             <Button
-              onClick={() => router.push("/imNotARobot")}
+              onClick={() => router.push("/Patient-Registration")}
               variant="contained"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded mb-5 font-sans"
             >

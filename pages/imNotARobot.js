@@ -12,6 +12,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { BiErrorCircle } from "react-icons/bi";
+import { setCookie } from "cookies-next";
 
 const Robot = (props) => {
   const [width, setWidth] = useState(400);
@@ -30,6 +31,7 @@ const Robot = (props) => {
   const capthcaRef = useRef(null);
 
   const verifyCaptcha = async (token) => {
+    setLoading(true);
     const res = await fetch(
       "https://xmks-s250-ypw0.n7.xano.io/api:2WckYZIa/recaptcha/validate",
       {
@@ -44,10 +46,15 @@ const Robot = (props) => {
     );
     const data = await res.json();
     if (data.status === "success") {
+      setCookie("recaptcha", true, {
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+      });
+
       router.replace("/Patient-Registration");
-      setLoading(true);
     } else {
       setError(true);
+      setLoading(false);
     }
   };
 
@@ -80,6 +87,7 @@ const Robot = (props) => {
             endIcon={loading && <CircularProgress size={20} />}
             variant="outlined"
             type="submit  "
+            disabled={loading}
           >
             Submit
           </Button>

@@ -66,7 +66,7 @@ export default function usePromptIfDirty(when) {
             id="describe-event"
             className="text-white text-lg md:text-xl"
           >
-            You may lose unsaved changes.
+            You may lose any changes.
             <p className="pt-2"> Are you sure you want to leave?</p>
           </DialogTitle>
           <div className="flex flex-row justify-center pt-4">

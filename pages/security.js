@@ -5,6 +5,7 @@ import {
   CardHeader,
   Button,
   Container,
+  Divider,
 } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/router";
@@ -16,6 +17,7 @@ const Security = () => {
       <Container>
         <Card>
           <CardHeader title="Our Security Practices" />
+          <Divider />
           <CardContent component={Container} className="text-base md:text-lg">
             At Midsouth Neurology, we take data security very seriously. Here
             are some of the ways we keep your data safe:
@@ -58,6 +60,11 @@ const Security = () => {
                 </a>{" "}
                 a HIPPA compliant email service that encrypts data at rest, to
                 store the emails sent from our webpage.
+              </li>
+              <li className="my-3">
+                {" "}
+                We do not and would never use third party cookies or display ads
+                to our users.
               </li>
               <li className="mb-3">
                 {" "}

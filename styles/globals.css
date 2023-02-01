@@ -7,19 +7,10 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Source Sans Pro", sans-serif;
+  color: black;
+  background: linear-gradient(250deg, #b5dbf2, #0450d4);
 }
 
 * {
   box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-    font-family: Arial;
-  }
-  body {
-    color: black;
-    background: linear-gradient(250deg, #b5dbf2, #0450d4);
-  }
 }

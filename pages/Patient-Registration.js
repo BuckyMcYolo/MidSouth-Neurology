@@ -29,6 +29,7 @@ import {
   FormControl,
   Select,
   Checkbox,
+  createFilterOptions,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -46,6 +47,28 @@ import { useRouter } from "next/router";
 import { CgTrash } from "react-icons/cg";
 import { BiErrorCircle } from "react-icons/bi";
 import usePromptIfDirty from "../components/Prompt";
+import { getCookie } from "cookies-next";
+import {
+  medicalHistoryOptions,
+  surgicalHistoryOptions,
+} from "../utils/arrayUtils";
+
+export const getServerSideProps = async ({ req }) => {
+  const token = getCookie("recaptcha", { req });
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/imNotARobot",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      token,
+    },
+  };
+};
 
 const PatientRegistration = () => {
   const router = useRouter();
@@ -104,6 +127,8 @@ const PatientRegistration = () => {
   const [date5Signed, setDate5Signed] = React.useState("");
   const [sign5Error, setSign5Error] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+
+  const filter = createFilterOptions();
 
   const getMeds = async () => {
     const res = await fetch(
@@ -365,8 +390,6 @@ const PatientRegistration = () => {
   const handleValueChange = (event, newValue) => {
     setSelectedMed(newValue);
   };
-
-  console.log(selectedMed);
 
   const { data: fetchedMeds, isLoading } = useQuery(
     ["medications", terms],
@@ -1280,7 +1303,6 @@ const PatientRegistration = () => {
                         ) : (
                           <MenuItem>No Dosage Available</MenuItem>
                         )}
-                        {console.log(fetchedMeds)}
                       </TextField>
                       <TextField
                         disabled={selectedMed ? false : true}
@@ -1402,21 +1424,73 @@ const PatientRegistration = () => {
                       Medical History
                     </InputLabel>
                     <div className="flex flex-col md:flex-row items-center justify-center">
-                      <TextField
-                        label="Medical Condition"
+                      <Autocomplete
                         className="my-3 md:mr-2 w-64 "
                         id={"medicalHistory"}
                         name={"medicalHistory"}
                         type="text"
-                        size="small"
                         value={selectedMedicalCondition}
-                        onChange={(e) =>
-                          setSelectedMedicalCondition(e.target.value)
-                        }
-                      />
+                        onChange={(event, newValue) => {
+                          if (typeof newValue === "string") {
+                            setSelectedMedicalCondition(newValue.title);
+                          } else if (newValue && newValue.inputValue) {
+                            // Create a new value from the user input
+                            setSelectedMedicalCondition(newValue.inputValue);
+                          } else if (newValue === null) {
+                            setSelectedMedicalCondition(null);
+                          } else {
+                            setSelectedMedicalCondition(newValue.title);
+                          }
+                        }}
+                        options={medicalHistoryOptions}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        freeSolo
+                        renderOption={(props, option) => (
+                          <li {...props}>{option.title}</li>
+                        )}
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some(
+                            (option) => inputValue === option.title
+                          );
+                          if (inputValue !== "" && !isExisting) {
+                            filtered.push({
+                              inputValue,
+                              title: `Add "${inputValue}"`,
+                            });
+                          }
+
+                          return filtered;
+                        }}
+                        getOptionLabel={(option) => {
+                          // Value selected with enter, right from the input
+                          if (typeof option === "string") {
+                            return option;
+                          }
+                          // Add "xxx" option created dynamically
+                          if (option.inputValue) {
+                            return option.inputValue;
+                          }
+                          // Regular option
+                          return option.title;
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Start typing to search"
+                            size="small"
+                          />
+                        )}
+                      ></Autocomplete>
 
                       <Button
                         disabled={
+                          selectedMedicalCondition == null ||
                           selectedMedicalCondition == "" ||
                           selectedMedicalCondition.length < 2
                         }
@@ -1481,24 +1555,77 @@ const PatientRegistration = () => {
                       Surgical History
                     </InputLabel>
                     <div className="flex flex-col md:flex-row items-center justify-center">
-                      <TextField
-                        label="Surgery / Procedure"
-                        className="mt-3 sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3 w-64 md:w-auto"
+                      <Autocomplete
+                        className="my-3 md:mr-2 w-64 "
                         id={"surgicalHistory"}
                         name={"surgicalHistory"}
                         type="text"
-                        size="small"
                         value={selectedSurgicalHistory}
-                        onChange={(e) =>
-                          setSelectedSurgicalHistory(e.target.value)
-                        }
-                      />
+                        onChange={(event, newValue) => {
+                          if (typeof newValue === "string") {
+                            setSelectedSurgicalHistory(newValue.title);
+                          } else if (newValue && newValue.inputValue) {
+                            // Create a new value from the user input
+                            setSelectedSurgicalHistory(newValue.inputValue);
+                          } else if (newValue === null) {
+                            setSelectedSurgicalHistory(null);
+                          } else {
+                            setSelectedSurgicalHistory(newValue.title);
+                          }
+                        }}
+                        options={surgicalHistoryOptions}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        freeSolo
+                        renderOption={(props, option) => (
+                          <li {...props}>{option.title}</li>
+                        )}
+                        filterOptions={(options, params) => {
+                          const filtered = filter(options, params);
+
+                          const { inputValue } = params;
+                          // Suggest the creation of a new value
+                          const isExisting = options.some(
+                            (option) => inputValue === option.title
+                          );
+                          if (inputValue !== "" && !isExisting) {
+                            filtered.push({
+                              inputValue,
+                              title: `Add "${inputValue}"`,
+                            });
+                          }
+
+                          return filtered;
+                        }}
+                        getOptionLabel={(option) => {
+                          // Value selected with enter, right from the input
+                          if (typeof option === "string") {
+                            return option;
+                          }
+                          // Add "xxx" option created dynamically
+                          if (option.inputValue) {
+                            return option.inputValue;
+                          }
+                          // Regular option
+                          return option.title;
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Start typing to search"
+                            size="small"
+                            className="mt-3 sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3 "
+                          />
+                        )}
+                      ></Autocomplete>
                       <DatePicker
                         className="w-64 md:w-auto sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
                         id="dob"
                         name="dob"
                         label="Date of Surgery"
                         disabled={
+                          selectedSurgicalHistory == null ||
                           selectedSurgicalHistory == "" ||
                           selectedSurgicalHistory.length < 2
                         }
@@ -1520,9 +1647,10 @@ const PatientRegistration = () => {
                       <Button
                         className=" sm:mt-0 ml-0 sm:ml-2 sm:mr-2 mb-3"
                         disabled={
+                          selectedSurgicalHistoryDate == null ||
                           selectedSurgicalHistory == "" ||
-                          selectedSurgicalHistory.length < 2 ||
-                          selectedSurgicalHistoryDate == null
+                          selectedSurgicalHistory == null ||
+                          selectedSurgicalHistory.length < 2
                         }
                         variant="outlined"
                         endIcon={<MdAddCircleOutline />}
@@ -1542,7 +1670,6 @@ const PatientRegistration = () => {
                         Add
                       </Button>
                     </div>
-                    {console.log(surgicalHistoryArray)}
                     <TableContainer
                       component={Paper}
                       className="mt-3 max-w-[300px] minxs:max-w-2xl bg-neutral-100 shadow-md border border-t-neutral-200"
