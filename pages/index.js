@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 import { motion } from "framer-motion";
 import WhyChooseUs from "../components/WhyChooseUs";
 import { useRouter } from "next/router";
-import { Button } from "@mui/material";
+import { Button, Container } from "@mui/material";
 
 export default function Home() {
   const router = useRouter();
@@ -46,30 +46,32 @@ export default function Home() {
       <NavBar />
       <section className="pt-36"></section>
       <Header />
-      <article className={Homestyles.article}>
-        <h1 className={Homestyles.statement}>
-          Providing exceptional Neurology service to Northeast Mississippi and
-          surrounding areas for over 18 years. Come see us in our Tupelo or
-          Corinth Offices.{" "}
-        </h1>
-        <p className={Homestyles.aboutUs}>
-          We offer a broad range of Neurological services such as state of the
-          art diagnostic testing equipment, medications and injections for
-          Migraine headaches, and a physician who is top class in recognizing,
-          diagnosing, and treating neuromuscular movement disorders
-          <motion.button
-            className={Homestyles.servicesButton}
-            whileHover={{
-              scale: 1.05,
-              opacity: 0.9,
-              transition: { type: "spring", stiffness: 400, damping: 10 },
-            }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => router.push("/services")}
-          >
-            Learn more about our services
-          </motion.button>
-        </p>
+      <article className="bg-[#6a92a9] pt-20 sm:pt-12 pb-20 mb-32 font-semibold">
+        <Container>
+          <h1 className={Homestyles.statement}>
+            Providing exceptional Neurology service to Northeast Mississippi and
+            surrounding areas for over 18 years. Come see us in our Tupelo or
+            Corinth Offices.{" "}
+          </h1>
+          <p className={Homestyles.aboutUs}>
+            We offer a broad range of Neurological services such as state of the
+            art diagnostic testing equipment, medications and injections for
+            Migraine headaches, and a physician who is top class in recognizing,
+            diagnosing, and treating neuromuscular movement disorders
+            <motion.button
+              className={Homestyles.servicesButton}
+              whileHover={{
+                scale: 1.05,
+                opacity: 0.9,
+                transition: { type: "spring", stiffness: 400, damping: 10 },
+              }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => router.push("/services")}
+            >
+              Learn more about our services
+            </motion.button>
+          </p>
+        </Container>
       </article>
       <WhyChooseUs />
       <Footer />

@@ -1,4 +1,4 @@
-.article {
+/* .article {
   color: rgb(0, 0, 0);
   height: fit-content;
   font-weight: 800;
@@ -6,7 +6,7 @@
   background-color: #6a92a9;
   padding-bottom: 45px;
   margin-bottom: 8rem;
-}
+} */
 .brain {
   z-index: -10;
   opacity: 0.8;
