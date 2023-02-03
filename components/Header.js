@@ -30,7 +30,6 @@ const Header = () => {
         <Container>
           <ul className={HeaderStyles.tests}>
             <motion.li
-              layout
               data-isOpen={is1Open}
               initial={{ borderRadius: 35 }}
               className={HeaderStyles.parent}
@@ -46,7 +45,6 @@ const Header = () => {
               </p>
             </motion.li>
             <motion.li
-              layout
               data-isOpen={is2Open}
               initial={{ borderRadius: 35 }}
               className={HeaderStyles.parent}
@@ -62,7 +60,6 @@ const Header = () => {
               </p>
             </motion.li>
             <motion.li
-              layout
               data-isOpen={is3Open}
               initial={{ borderRadius: 35 }}
               className={HeaderStyles.parent}
@@ -78,7 +75,6 @@ const Header = () => {
               </p>
             </motion.li>
             <motion.li
-              layout
               data-isOpen={is4Open}
               initial={{ borderRadius: 35 }}
               className={HeaderStyles.parent}
