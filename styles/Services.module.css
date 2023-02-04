@@ -1,9 +1,9 @@
 .href {
-  color: whitesmoke;
+  color: blue;
 }
 .href:hover {
   opacity: 0.8;
-  color: rgb(222, 94, 115);
+  text-decoration: underline;
 }
 .services ul {
   list-style: none;
@@ -13,7 +13,6 @@
 }
 .services li {
   display: block;
-  padding: 2rem 10rem;
   font-size: 1.65rem;
   text-align: center;
   word-spacing: 1.5px;
@@ -37,6 +36,7 @@
   background: rgb(7, 39, 70);
   transform-origin: 0%;
   z-index: 5;
+  border-radius: 2rem;
 }
 .main {
   padding: 2rem;

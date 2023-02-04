@@ -49,10 +49,7 @@ const Footer = () => {
         </p>{" "}
         <p className={FooterStyles.patient_portal}>
           Contact Us:
-          <a
-            href="tel:6623969447"
-            className=" text-black  hover:text-blue-500 active:text-blue-400 rounded-full px-5  text-center "
-          >
+          <a href="tel:6623969447" className=" pl-2 sm:pl-0  text-center ">
             <motion.button
               className={FooterStyles.mychartbtn}
               whileHover={{

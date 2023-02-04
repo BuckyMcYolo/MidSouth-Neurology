@@ -43,6 +43,7 @@
   cursor: pointer;
   box-shadow: 0 10px 15px -3px rgba(0, 119, 254, 0.216),
     0 4px 6px -4px rgba(0, 13, 133, 0.418);
+  transition: ease-out 0.25s;
 }
 
 .parent:hover {
