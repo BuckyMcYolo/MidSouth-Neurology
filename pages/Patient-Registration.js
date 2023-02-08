@@ -238,7 +238,6 @@ const PatientRegistration = () => {
       city: yup.string().required("Required"),
       state: yup.string().required("Required"),
       zip: yup.string().required("Required"),
-      social: yup.string().required("Required"),
       pcp: yup.string().required("Required"),
       phone: yup.string().required("Required"),
       email: yup.string().required("Required").email("Invalid email address"),
@@ -560,6 +559,7 @@ const PatientRegistration = () => {
                         id="social"
                         name="social"
                         type="number"
+                        placeholder="Optional"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.social}
