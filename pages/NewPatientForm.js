@@ -1,10 +1,18 @@
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import Head from "next/head";
-import { Alert, Button, Container } from "@mui/material";
+import { Alert, Button, CircularProgress, Container } from "@mui/material";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const NewPatientForm = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleForm = () => {
+    router.push("/Patient-Registration");
+    setLoading(true);
+  };
+
   const router = useRouter();
   return (
     <div>
@@ -29,9 +37,14 @@ const NewPatientForm = () => {
           </p>
           <div className="text-center">
             <Button
-              onClick={() => router.push("/Patient-Registration")}
+              onClick={handleForm}
               variant="contained"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded mb-5 font-sans"
+              endIcon={
+                loading ? (
+                  <CircularProgress size={20} className="text-white" />
+                ) : null
+              }
             >
               Take me to the form
             </Button>
