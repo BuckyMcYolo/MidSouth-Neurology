@@ -1,7 +1,4 @@
 node_modules
 .next
-package.json
 yarn.lock
-
-
 .env
