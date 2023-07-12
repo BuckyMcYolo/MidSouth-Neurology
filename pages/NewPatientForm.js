@@ -9,7 +9,9 @@ const NewPatientForm = () => {
   const [loading, setLoading] = useState(false);
 
   const handleForm = () => {
-    router.push("/Patient-Registration");
+    router.push(
+      "https://smartform.digitalhealthcaresolutions.io/registration/midsouth-neurology"
+    );
     setLoading(true);
   };
 
